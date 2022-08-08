@@ -1,11 +1,9 @@
 import 'package:cryptmark/cryptmark_model.dart';
 import 'package:cryptmark/cryptmark_service.dart';
 import 'package:flutter/material.dart';
-import 'cryptmark_model.dart';
 import 'package:cryptmark/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +22,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-
       home: const MyHomePage(title: 'Cryptmark'),
     );
   }
