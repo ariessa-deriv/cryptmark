@@ -1,6 +1,7 @@
-import 'dart:ffi';
-import 'package:flutter/cupertino.dart';
+import 'package:cryptmark/cryptmark_model.dart';
+import 'package:cryptmark/cryptmark_service.dart';
 import 'package:flutter/material.dart';
+import 'package:cryptmark/pages/home_page.dart';
 import 'package:provider/provider.dart';
 import 'Theme/theme_model.dart';
 
@@ -23,7 +24,6 @@ class MyApp extends StatelessWidget {
           home: const MyHomePage(title: 'Cryptmark'),
         );
       }),
-    );
   }
 }
 
