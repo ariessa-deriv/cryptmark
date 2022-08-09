@@ -20,18 +20,20 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var dummyCoinList = List<DataRow>.generate(20, (i) {
     return DataRow(cells: <DataCell>[
-      DataCell(GestureDetector(
-        child: Container(
-          alignment: Alignment.center,
-          child: Text(
-            '${i + 1}',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.grey.shade600,
-                fontSize: 11),
+      DataCell(
+        GestureDetector(
+          child: Container(
+            alignment: Alignment.center,
+            child: Text(
+              '${i + 1}',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade600,
+                  fontSize: 11),
+            ),
           ),
         ),
-      )),
+      ),
       DataCell(Container(
         alignment: Alignment.centerLeft,
         child: Column(
@@ -266,94 +268,115 @@ class _HomePageState extends State<HomePage> {
                       rows: List<DataRow>.generate(test.length, (i) {
                         return DataRow(
                           cells: <DataCell>[
-                            DataCell(Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                '${i + 1}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey.shade600,
-                                    fontSize: 11),
-                              ),
-                            )),
-                            DataCell(Container(
-                              alignment: Alignment.centerLeft,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const SizedBox(
-                                    height: 4,
+                            DataCell(
+                                Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    '${i + 1}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey.shade600,
+                                        fontSize: 11),
                                   ),
-                                  Image.network('${test[i]['image']}',
-                                      width: 20, height: 20),
-                                  const SizedBox(
-                                    height: 4,
+                                ), onTap: (() {
+                              Navigator.pushNamed(context, coindetailRoute,
+                                  arguments: 'Data from home');
+                            })),
+                            DataCell(
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(
+                                        height: 4,
+                                      ),
+                                      Image.network('${test[i]['image']}',
+                                          width: 20, height: 20),
+                                      const SizedBox(
+                                        height: 4,
+                                      ),
+                                      Text(
+                                        '${test[i]['symbol']}'.toUpperCase(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey.shade900,
+                                            fontSize: 12),
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    '${test[i]['symbol']}'.toUpperCase(),
-                                    textAlign: TextAlign.center,
+                                ), onTap: (() {
+                              Navigator.pushNamed(context, coindetailRoute,
+                                  arguments: 'Data from home');
+                            })),
+                            DataCell(
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    '\$${NumberFormat("#,##0.00", "en_US").format(test[i]['current_price'].toDouble())}',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.grey.shade900,
-                                        fontSize: 12),
+                                        fontSize: 13),
                                   ),
-                                ],
-                              ),
-                            )),
-                            DataCell(Container(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                '\$${NumberFormat("#,##0.00", "en_US").format(test[i]['current_price'].toDouble())}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey.shade900,
-                                    fontSize: 13),
-                              ),
-                            )),
-                            DataCell(Container(
-                              alignment: Alignment.centerRight,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  test[i]['price_change_percentage_24h_in_currency']
-                                              .toDouble() <=
-                                          0
-                                      ? Icon(Icons.arrow_drop_down,
-                                          size: 20, color: Colors.red)
-                                      : Icon(
-                                          Icons.arrow_drop_up,
-                                          size: 20,
-                                          color: Colors.green,
-                                        ),
-                                  Text(
-                                    '${test[i]['price_change_percentage_24h_in_currency'].toDouble().toStringAsFixed(1)}%',
+                                ), onTap: (() {
+                              Navigator.pushNamed(context, coindetailRoute,
+                                  arguments: 'Data from home');
+                            })),
+                            DataCell(
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      test[i]['price_change_percentage_24h_in_currency']
+                                                  .toDouble() <=
+                                              0
+                                          ? Icon(Icons.arrow_drop_down,
+                                              size: 20, color: Colors.red)
+                                          : Icon(
+                                              Icons.arrow_drop_up,
+                                              size: 20,
+                                              color: Colors.green,
+                                            ),
+                                      Text(
+                                        '${test[i]['price_change_percentage_24h_in_currency'].toDouble().toStringAsFixed(1)}%',
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color:
+                                                test[i]['price_change_percentage_24h_in_currency']
+                                                            .toDouble() <
+                                                        0
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                            fontSize: 13),
+                                      ),
+                                    ],
+                                  ),
+                                ), onTap: (() {
+                              Navigator.pushNamed(context, coindetailRoute,
+                                  arguments: 'Data from home');
+                            })),
+                            DataCell(
+                                Container(
+                                  padding: EdgeInsets.only(right: 20),
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    '\$${NumberFormat('###,###,000').format(test[i]['market_cap'])}',
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color:
-                                            test[i]['price_change_percentage_24h_in_currency']
-                                                        .toDouble() <
-                                                    0
-                                                ? Colors.red
-                                                : Colors.green,
+                                        color: Colors.grey.shade900,
                                         fontSize: 13),
                                   ),
-                                ],
-                              ),
-                            )),
-                            DataCell(Container(
-                              padding: EdgeInsets.only(right: 20),
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                '\$${NumberFormat('###,###,000').format(test[i]['market_cap'])}',
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey.shade900,
-                                    fontSize: 13),
-                              ),
-                            )),
+                                ), onTap: (() {
+                              Navigator.pushNamed(context, coindetailRoute,
+                                  arguments: 'Data from home');
+                            })),
                           ],
                         );
                       })),
