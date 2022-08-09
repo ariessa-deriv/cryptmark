@@ -359,7 +359,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ), onTap: (() {
                               Navigator.pushNamed(context, coindetailRoute,
-                                  arguments: 'Data from home');
+                                  arguments: test[i]);
                             })),
                             DataCell(
                                 Container(
