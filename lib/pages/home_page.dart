@@ -145,9 +145,9 @@ class _HomePageState extends State<HomePage> {
     final double width = MediaQuery.of(context).size.width;
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
-          backgroundColor: Colors.white,
           appBar: AppBar(
             title: Text('Cryptmark'),
+            automaticallyImplyLeading: false,
             actions: <Widget>[
               IconButton(
                   onPressed: () {
