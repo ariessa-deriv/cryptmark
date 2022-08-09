@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cryptmark/models/cryptmark_model.dart';
+import 'package:cryptmark/routing/router.dart';
 import 'package:cryptmark/services/cryptmark_service.dart';
 import 'package:cryptmark/pages/coin_detail_page.dart';
 import 'package:cryptmark/pages/watchlist_page.dart';
@@ -28,6 +29,8 @@ class MyApp extends StatelessWidget {
         child: Consumer(builder: (context, ThemeModel themeNotifier, child) {
           return MaterialApp(
               debugShowCheckedModeBanner: false,
+              onGenerateRoute: (settings) => generateRoute(settings),
+              initialRoute: homeRoute,
               title: 'Flutter Demo',
               theme:
                   themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
@@ -46,14 +49,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   List<dynamic> test = [];
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   Future<void> fetchAPi() async {
     CryptmarkService cryptmarkService = CryptmarkService();
@@ -105,11 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               const Text(
                 'You have pushed the button this many times:',
-              ),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headline4,
-              ),
+              )
             ],
           ),
         ),
