@@ -2,12 +2,10 @@ import 'package:cryptmark/cryptmark_model.dart';
 import 'package:cryptmark/cryptmark_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cryptmark/pages/home_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'Theme/theme_model.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   runApp(const MyApp());
 }
 
@@ -16,14 +14,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Cryptmark',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Cryptmark'),
-    );
+    return ChangeNotifierProvider(
+      create: (_) => ThemeModel(),
+      child: Consumer(builder: (context, ThemeModel themeNotifier, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
+          home: const MyHomePage(title: 'Cryptmark'),
+        );
+      }),
   }
 }
 
@@ -45,34 +45,44 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future <void> fetchAPi () async {
-    CryptmarkService cryptmarkService = CryptmarkService();
-    try {
-      CryptmarkModel cryptmarkModel =
-          await cryptmarkService.fetchCryptMarkInformation();
-      print(cryptmarkModel.runtimeType);
-    }
-
-    catch (error) {
-      print('Error: $error');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
+    return Consumer(builder: (context, ThemeModel themeNotifier, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+          actions: <Widget>[
+            IconButton(
+                onPressed: () {
+                  themeNotifier.isDark
+                      ? themeNotifier.isDark = false
+                      : themeNotifier.isDark = true;
+                },
+                icon: Icon(themeNotifier.isDark
+                    ? Icons.nightlight_rounded
+                    : Icons.wb_sunny))
+          ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: fetchAPi,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text(
+                'You have pushed the button this many times:',
+              ),
+              Text(
+                '$_counter',
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _incrementCounter,
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
+        ),
+      );
+    });
   }
 }
