@@ -1,3 +1,4 @@
+import 'package:cryptmark/routing/router.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -24,7 +25,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      if (index == 0) {
+        Navigator.pushNamed(context, homeRoute, arguments: 'Data from home');
+      }
+
+      if (index == 1) {
+        Navigator.pushNamed(context, watchlistRoute,
+            arguments: 'Data from home');
+      }
     });
   }
 
