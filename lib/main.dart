@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cryptmark/models/cryptmark_model.dart';
 import 'package:cryptmark/services/cryptmark_service.dart';
 import 'package:cryptmark/pages/coin_detail_page.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:cryptmark/pages/home_page.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,11 +27,11 @@ class MyApp extends StatelessWidget {
         create: (_) => ThemeModel(),
         child: Consumer(builder: (context, ThemeModel themeNotifier, child) {
           return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
-            theme: themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
-            home: HomePage(),
-          );
+              debugShowCheckedModeBanner: false,
+              title: 'Flutter Demo',
+              theme:
+                  themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
+              home: HomePage());
         }));
   }
 }
@@ -44,11 +47,38 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  List<dynamic> test = [];
 
   void _incrementCounter() {
     setState(() {
       _counter++;
     });
+  }
+
+  Future<void> fetchAPi() async {
+    CryptmarkService cryptmarkService = CryptmarkService();
+    final Uri url = Uri(
+      scheme: 'https',
+      host: 'api.coingecko.com',
+      path: 'api/v3/coins/markets',
+      queryParameters: {
+        'vs_currency': 'usd',
+        'order': 'market_cap_desc',
+        'per_page': '50',
+        'page': '1',
+        'price_change_percentage': '1h,24h,7d'
+      },
+    );
+    http.Response response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var testResponse = jsonDecode(response.body);
+      print(testResponse.runtimeType);
+      test = testResponse;
+      print(test[4]['id']);
+    } else {
+      throw Exception('Failed to load weather information.');
+    }
   }
 
   @override
@@ -84,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: _incrementCounter,
+          onPressed: fetchAPi,
           tooltip: 'Increment',
           child: const Icon(Icons.add),
         ),
