@@ -1,11 +1,17 @@
 import 'package:cryptmark/cryptmark_model.dart';
 import 'package:cryptmark/cryptmark_service.dart';
+import 'package:cryptmark/pages/coin_detail_page.dart';
+import 'package:cryptmark/pages/watchlist_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cryptmark/pages/home_page.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'Theme/theme_model.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(const MyApp());
 }
 
@@ -15,15 +21,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ThemeModel(),
-      child: Consumer(builder: (context, ThemeModel themeNotifier, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
-          theme: themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
-          home: const MyHomePage(title: 'Cryptmark'),
-        );
-      }),
+        create: (_) => ThemeModel(),
+        child: Consumer(builder: (context, ThemeModel themeNotifier, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter Demo',
+            theme: themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
+            home: const MyHomePage(title: 'Cryptmark'),
+          );
+        }));
   }
 }
 
