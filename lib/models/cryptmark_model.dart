@@ -29,21 +29,21 @@ class CryptmarkModel {
   // final double priceChangePercentage24HInCurrency;
   // final double priceChangePercentage7DInCurrency;
 
-  factory CryptmarkModel.fromJson(String str) => CryptmarkModel.fromMap(json.decode(str));
+  factory CryptmarkModel.fromJson(String str) =>
+      CryptmarkModel.fromMap(json.decode(str));
 
   factory CryptmarkModel.fromMap(List<dynamic> json) => CryptmarkModel(
-    id: json[0],
-    // symbol: json["symbol"],
-    // name: json["name"],
-    // image: json["image"],
-    // currentPrice: json["current_price"].toDouble(),
-    // marketCap: json["market_cap"],
-    // circulatingSupply: json["circulating_supply"].toDouble(),
-    // totalSupply: json["total_supply"] == null ? null : json["total_supply"].toDouble(),
-    // maxSupply: json["max_supply"] == null ? null : json["max_supply"].toDouble(),
-    // priceChangePercentage1HInCurrency: json["price_change_percentage_1h_in_currency"].toDouble(),
-    // priceChangePercentage24HInCurrency: json["price_change_percentage_24h_in_currency"].toDouble(),
-    // priceChangePercentage7DInCurrency: json["price_change_percentage_7d_in_currency"].toDouble(),
-  );
+        id: json[0],
+        // symbol: json["symbol"],
+        // name: json["name"],
+        // image: json["image"],
+        // currentPrice: json["current_price"].toDouble(),
+        // marketCap: json["market_cap"],
+        // circulatingSupply: json["circulating_supply"].toDouble(),
+        // totalSupply: json["total_supply"] == null ? null : json["total_supply"].toDouble(),
+        // maxSupply: json["max_supply"] == null ? null : json["max_supply"].toDouble(),
+        // priceChangePercentage1HInCurrency: json["price_change_percentage_1h_in_currency"].toDouble(),
+        // priceChangePercentage24HInCurrency: json["price_change_percentage_24h_in_currency"].toDouble(),
+        // priceChangePercentage7DInCurrency: json["price_change_percentage_7d_in_currency"].toDouble(),
+      );
 }
-
