@@ -314,17 +314,27 @@ class _HomePageState extends State<HomePage> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Icon(
-                                    Icons.arrow_drop_up,
-                                    size: 20,
-                                    color: Colors.green,
-                                  ),
+                                  test[i]['price_change_percentage_24h_in_currency']
+                                              .toDouble() <=
+                                          0
+                                      ? Icon(Icons.arrow_drop_down,
+                                          size: 20, color: Colors.red)
+                                      : Icon(
+                                          Icons.arrow_drop_up,
+                                          size: 20,
+                                          color: Colors.green,
+                                        ),
                                   Text(
                                     '${test[i]['price_change_percentage_24h_in_currency'].toDouble().toStringAsFixed(1)}%',
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.green,
+                                        color:
+                                            test[i]['price_change_percentage_24h_in_currency']
+                                                        .toDouble() <
+                                                    0
+                                                ? Colors.red
+                                                : Colors.green,
                                         fontSize: 13),
                                   ),
                                 ],
