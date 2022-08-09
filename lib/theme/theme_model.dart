@@ -1,5 +1,5 @@
 import 'package:collection/equality.dart';
-import 'package:cryptmark/Theme/theme_preferences.dart';
+import 'package:cryptmark/theme/theme_preferences.dart';
 import 'package:flutter/foundation.dart';
 
 class ThemeModel extends ChangeNotifier {

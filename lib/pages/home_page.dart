@@ -1,7 +1,9 @@
+import 'package:cryptmark/theme/theme_model.dart';
 import 'package:cryptmark/widgets/application_bar.dart';
 import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
 import 'package:cryptmark/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -101,120 +103,135 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: ApplicationBar(),
-        bottomNavigationBar: BottomNavBar(),
-        body: Column(
-          children: [
-            Container(child: SearchBar()),
-            SizedBox(
-              height: 50,
-            ),
-            Text(
-              'Homepage',
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Display prices of 50 cryptocurrencies',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-            ),
-            SizedBox(
-              height: 50,
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: DataTable(
-                  dataRowHeight: 60,
-                  columnSpacing: 0,
-                  horizontalMargin: 0,
-                  columns: <DataColumn>[
-                    DataColumn(
-                      label: Container(
-                        width: width * .1,
-                        child: Text(
-                          '#',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey.shade700,
-                              fontSize: 11),
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Container(
-                        width: width * .1,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Coin'.toUpperCase(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey.shade700,
-                              fontSize: 11),
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Container(
-                        width: width * .2,
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          'Price'.toUpperCase(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey.shade700,
-                              fontSize: 11),
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Container(
-                        width: width * .2,
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          '24H'.toUpperCase(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey.shade700,
-                              fontSize: 11),
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Container(
-                        width: width * .4,
-                        alignment: Alignment.centerRight,
-                        padding: EdgeInsets.only(right: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Market Cap'.toUpperCase(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade700,
-                                  fontSize: 11),
-                            ),
-                            IconButton(
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(),
-                                icon: Icon(Icons.arrow_drop_up),
+    return Consumer(builder: (context, ThemeModel themeNotifier, child) {
+      return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: Text('Cryptmark'),
+            actions: <Widget>[
+              IconButton(
+                  onPressed: () {
+                    themeNotifier.isDark
+                        ? themeNotifier.isDark = false
+                        : themeNotifier.isDark = true;
+                  },
+                  icon: Icon(themeNotifier.isDark
+                      ? Icons.nightlight_rounded
+                      : Icons.wb_sunny))
+            ],
+          ),
+          bottomNavigationBar: BottomNavBar(),
+          body: Column(
+            children: [
+              Container(child: SearchBar()),
+              SizedBox(
+                height: 50,
+              ),
+              Text(
+                'Homepage',
+                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Display prices of 50 cryptocurrencies',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: DataTable(
+                    dataRowHeight: 60,
+                    columnSpacing: 0,
+                    horizontalMargin: 0,
+                    columns: <DataColumn>[
+                      DataColumn(
+                        label: Container(
+                          width: width * .1,
+                          child: Text(
+                            '#',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
                                 color: Colors.grey.shade700,
-                                onPressed: () {}),
-                          ],
+                                fontSize: 11),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                  rows: dummyCoinList,
+                      DataColumn(
+                        label: Container(
+                          width: width * .1,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Coin'.toUpperCase(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade700,
+                                fontSize: 11),
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Container(
+                          width: width * .2,
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'Price'.toUpperCase(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade700,
+                                fontSize: 11),
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Container(
+                          width: width * .2,
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            '24H'.toUpperCase(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade700,
+                                fontSize: 11),
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Container(
+                          width: width * .4,
+                          alignment: Alignment.centerRight,
+                          padding: EdgeInsets.only(right: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                'Market Cap'.toUpperCase(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey.shade700,
+                                    fontSize: 11),
+                              ),
+                              IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(),
+                                  icon: Icon(Icons.arrow_drop_up),
+                                  color: Colors.grey.shade700,
+                                  onPressed: () {}),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                    rows: dummyCoinList,
+                  ),
                 ),
               ),
-            ),
-          ],
-        ));
+            ],
+          ));
+    });
   }
 }

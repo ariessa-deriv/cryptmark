@@ -2,11 +2,11 @@ import 'package:cryptmark/models/cryptmark_model.dart';
 import 'package:cryptmark/services/cryptmark_service.dart';
 import 'package:cryptmark/pages/coin_detail_page.dart';
 import 'package:cryptmark/pages/watchlist_page.dart';
+import 'package:cryptmark/theme/theme_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cryptmark/pages/home_page.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'Theme/theme_model.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             theme: themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
-            home: const MyHomePage(title: 'Cryptmark'),
+            home: HomePage(),
           );
         }));
   }
