@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 
@@ -21,7 +22,7 @@ class CryptmarkService {
     http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {
-      return CryptmarkModel.fromJson(response.body);
+      return CryptmarkModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load weather information.');
     }
