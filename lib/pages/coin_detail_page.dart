@@ -139,15 +139,6 @@ class _CoinDetailState extends State<CoinDetail> {
                 ),
                 onPressed: () {},
               ),
-              IconButton(
-                  onPressed: () {
-                    themeNotifier.isDark
-                        ? themeNotifier.isDark = false
-                        : themeNotifier.isDark = true;
-                  },
-                  icon: Icon(themeNotifier.isDark
-                      ? Icons.nightlight_rounded
-                      : Icons.wb_sunny))
             ],
             leading: IconButton(
               icon: Icon(
