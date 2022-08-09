@@ -1,12 +1,7 @@
-// To parse this JSON data, do
-//
-//     final cryptmarkModel = cryptmarkModelFromMap(jsonString);
-
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
-class CryptmarkModel {
-  CryptmarkModel({
+class CoinModel {
+  CoinModel({
     required this.id,
     required this.symbol,
     required this.name,
@@ -68,12 +63,11 @@ class CryptmarkModel {
   final double priceChangePercentage24HInCurrency;
   final double priceChangePercentage7DInCurrency;
 
-  factory CryptmarkModel.fromJson(String str) =>
-      CryptmarkModel.fromMap(json.decode(str));
+  factory CoinModel.fromJson(String str) => CoinModel.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory CryptmarkModel.fromMap(Map<String, dynamic> json) => CryptmarkModel(
+  factory CoinModel.fromMap(Map<String, dynamic> json) => CoinModel(
         id: json["id"],
         symbol: json["symbol"],
         name: json["name"],
