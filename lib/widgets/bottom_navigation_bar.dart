@@ -13,11 +13,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
-      'Index 0: HomePage',
+      'HomePage',
       style: optionStyle,
     ),
     Text(
-      'Index 1: Watchlist',
+      'Watchlist',
       style: optionStyle,
     ),
   ];
@@ -31,18 +31,24 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
+          icon: Icon(
+            Icons.show_chart,
+            color: Colors.grey.shade700,
+          ),
+          label: 'Market',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.business),
+          icon: Icon(
+            Icons.star_border_outlined,
+            color: Colors.grey.shade700,
+          ),
           label: 'Watchlist',
         ),
       ],
       currentIndex: _selectedIndex,
-      selectedItemColor: Colors.black,
+      selectedItemColor: Colors.green,
       onTap: _onItemTapped,
     );
   }
