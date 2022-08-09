@@ -1,3 +1,4 @@
+import 'package:cryptmark/routing/router.dart';
 import 'package:cryptmark/theme/theme_model.dart';
 import 'package:cryptmark/widgets/application_bar.dart';
 import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
@@ -16,14 +17,20 @@ class _HomePageState extends State<HomePage> {
   var dummyCoinList = List<DataRow>.generate(20, (i) {
     return DataRow(
       cells: <DataCell>[
-        DataCell(Container(
-          alignment: Alignment.center,
-          child: Text(
-            '${i + 1}',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.grey.shade600,
-                fontSize: 11),
+        DataCell(GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, coindetailRoute,
+                arguments: 'Data from home');
+          },
+          child: Container(
+            alignment: Alignment.center,
+            child: Text(
+              '${i + 1}',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade600,
+                  fontSize: 11),
+            ),
           ),
         )),
         DataCell(Container(
