@@ -4,10 +4,12 @@ import 'package:cryptmark/routing/router.dart';
 import 'package:cryptmark/services/coin_service.dart';
 import 'package:cryptmark/pages/coin_detail_page.dart';
 import 'package:cryptmark/pages/watchlist_page.dart';
+import 'package:cryptmark/states/coin_cubit.dart';
 import 'package:cryptmark/theme/theme_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cryptmark/pages/home_page.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,7 +17,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  runApp(const MyApp());
+  runApp(BlocProvider(create: ((context) => CoinCubit())));
 }
 
 class MyApp extends StatelessWidget {
