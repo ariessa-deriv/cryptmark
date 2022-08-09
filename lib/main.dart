@@ -1,5 +1,7 @@
 import 'package:cryptmark/cryptmark_model.dart';
 import 'package:cryptmark/cryptmark_service.dart';
+import 'package:cryptmark/pages/coin_detail_page.dart';
+import 'package:cryptmark/pages/watchlist_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cryptmark/pages/home_page.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,8 @@ import 'package:flutter/services.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(const MyApp());
 }
 
@@ -22,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Cryptmark'),
+      home: WatchlistPage(),
     );
   }
 }
@@ -45,15 +48,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future <void> fetchAPi () async {
+  Future<void> fetchAPi() async {
     CryptmarkService cryptmarkService = CryptmarkService();
     try {
       CryptmarkModel cryptmarkModel =
           await cryptmarkService.fetchCryptMarkInformation();
       print(cryptmarkModel.runtimeType);
-    }
-
-    catch (error) {
+    } catch (error) {
       print('Error: $error');
     }
   }
@@ -65,8 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-        ),
+        child: Column(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: fetchAPi,
