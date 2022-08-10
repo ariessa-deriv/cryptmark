@@ -4,10 +4,12 @@ import 'package:cryptmark/routing/router.dart';
 import 'package:cryptmark/services/coin_service.dart';
 import 'package:cryptmark/pages/coin_detail_page.dart';
 import 'package:cryptmark/pages/watchlist_page.dart';
+import 'package:cryptmark/states/coin_cubit.dart';
 import 'package:cryptmark/theme/theme_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cryptmark/pages/home_page.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,7 +17,10 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  runApp(const MyApp());
+  runApp(BlocProvider(
+    create: ((context) => CoinCubit()),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -30,9 +35,16 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               onGenerateRoute: (settings) => generateRoute(settings),
               initialRoute: homeRoute,
+<<<<<<< HEAD
               title: 'Flutter Demo',
               theme:
                   themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
+=======
+              title: 'Cryptmark',
+              theme: themeNotifier.isDark
+                  ? ThemeData.dark()
+                  : ThemeData(primaryColor: Colors.white),
+>>>>>>> 1d4f79a4e33f9e4a72d8e130302c66323b0d8ccf
               home: HomePage());
         }));
   }
