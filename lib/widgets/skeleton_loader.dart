@@ -88,7 +88,7 @@ class SkeletonLoader extends StatelessWidget {
             ),
           ),
         ],
-        rows: List<DataRow>.generate(5, (i) {
+        rows: List<DataRow>.generate(6, (i) {
           return DataRow(
             cells: <DataCell>[
               DataCell(Container(
