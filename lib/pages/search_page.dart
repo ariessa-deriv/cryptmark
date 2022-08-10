@@ -16,7 +16,6 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-
   List<dynamic> search = [];
   late final String coinName;
 
@@ -33,13 +32,13 @@ class _SearchPageState extends State<SearchPage> {
       host: 'api.coingecko.com',
       path: 'api/v3/coins/markets',
       queryParameters: {
-    'ids': coinID,
-    'vs_currency': 'usd',
-    'order': 'market_cap_desc',
-    'per_page': '50',
-    'page': '1',
-    'price_change_percentage': '1h,24h,7d',
-    //'query': widget.searchCoin,
+        'ids': coinID,
+        'vs_currency': 'usd',
+        'order': 'market_cap_desc',
+        'per_page': '50',
+        'page': '1',
+        'price_change_percentage': '1h,24h,7d',
+        //'query': widget.searchCoin,
       },
     );
     http.Response response = await http.get(url);
@@ -75,7 +74,7 @@ class _SearchPageState extends State<SearchPage> {
                       : Icons.wb_sunny))
             ],
           ),
-          bottomNavigationBar: BottomNavBar(),
+          bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
               Column(

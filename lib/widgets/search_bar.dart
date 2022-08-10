@@ -1,16 +1,14 @@
-import 'package:cryptmark/models/cryptmark_model.dart';
+import 'package:cryptmark/models/coin_model.dart';
 import 'package:cryptmark/pages/home_page.dart';
 import 'package:cryptmark/pages/search_page.dart';
 import 'package:flutter/material.dart';
 
 class SearchBar extends StatefulWidget {
-
   @override
   State<SearchBar> createState() => _SearchBarState();
 }
 
 class _SearchBarState extends State<SearchBar> {
-
   late final TextEditingController _controller;
   bool _isCoinNameEmpty = true;
 
@@ -20,8 +18,8 @@ class _SearchBarState extends State<SearchBar> {
     super.initState();
     _controller = TextEditingController();
     _controller.addListener(() {
-      setState(() =>
-      _isCoinNameEmpty = _controller.text.isEmpty,
+      setState(
+        () => _isCoinNameEmpty = _controller.text.isEmpty,
       );
     });
   }
@@ -44,11 +42,13 @@ class _SearchBarState extends State<SearchBar> {
       ]),
       child: TextField(
         controller: textController,
-       onSubmitted: (value) {
-          Navigator.push(context, MaterialPageRoute(
-              builder: (context) => SearchPage(
-                  searchCoin: textController.text)));
-       },
+        onSubmitted: (value) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      SearchPage(searchCoin: textController.text)));
+        },
         decoration: InputDecoration(
           prefixIcon: const Icon(
             Icons.search,
