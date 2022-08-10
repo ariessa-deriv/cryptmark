@@ -1,12 +1,19 @@
+import 'package:cryptmark/models/coin_model.dart';
+import 'package:cryptmark/routing/router.dart';
+import 'package:cryptmark/states/coin_cubit.dart';
+import 'package:cryptmark/states/coin_state.dart';
 import 'dart:convert';
 import 'package:cryptmark/pages/search_page.dart';
 import 'package:cryptmark/theme/theme_model.dart';
 import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
 import 'package:cryptmark/widgets/search_bar.dart';
+import 'package:cryptmark/widgets/skeleton_loader.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,43 +21,38 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
-class _HomePageState extends State<HomePage> {
 
-  List<dynamic> test = [];
-  late final String coinName;
+class _HomePageState extends State<HomePage> {
+  late CoinCubit cubit;
+  List<String> currentWatchlist = [];
+
+  // Get watchlist from SharedPreferences
+  Future<void> getWatchlistFromSharedPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String>? watchlist = prefs.getStringList('watchlist');
+
+    if (watchlist == null) {
+      setState(() {
+        currentWatchlist = [];
+      });
+    } else {
+      setState(() {
+        currentWatchlist = watchlist;
+      });
+    }
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    fetchAPi();
-  }
 
-  Future<void> fetchAPi({String? coinID}) async {
-    final Uri url = Uri(
-      scheme: 'https',
-      host: 'api.coingecko.com',
-      path: 'api/v3/coins/markets',
-      queryParameters: {
-        'ids': coinID,
-        'vs_currency': 'usd',
-        'order': 'market_cap_desc',
-        'per_page': '50',
-        'page': '1',
-        'price_change_percentage': '1h,24h,7d'
-      },
-    );
-    http.Response response = await http.get(url);
+    // TODO: Fetch coins from API only if cubit has no value
 
-    if (response.statusCode == 200) {
-      var testResponse = jsonDecode(response.body);
-      print(testResponse.runtimeType);
-      setState(() {
-        test = testResponse;
-      });
-    } else {
-      throw Exception('Failed to load coin information.');
-    }
+    // Fetch coins from API
+    cubit = BlocProvider.of<CoinCubit>(context)..fetchCoins();
+
+    // Get watchlist from SharedPreferences
+    getWatchlistFromSharedPrefs();
   }
 
   @override
@@ -60,40 +62,37 @@ class _HomePageState extends State<HomePage> {
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
           appBar: AppBar(
-            title: Text('Cryptmark'),
+            backgroundColor: themeNotifier.isDark
+                ? Colors.grey.shade800
+                : Colors.grey.shade200,
+            title: Text(
+              'Cryptmark',
+              style: TextStyle(
+                color: themeNotifier.isDark
+                    ? Colors.grey.shade200
+                    : Colors.grey.shade600,
+              ),
+            ),
             automaticallyImplyLeading: false,
             actions: <Widget>[
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        themeNotifier.isDark
-                            ? themeNotifier.isDark = false
-                            : themeNotifier.isDark = true;
-                      },
-                      icon: Icon(themeNotifier.isDark
-                          ? Icons.nightlight_rounded
-                          : Icons.wb_sunny)),
-                  // IconButton(
-                  //     onPressed: () {
-                  //       Navigator.push(context, MaterialPageRoute(
-                  //           builder: (context) => SearchPage(
-                  //               searchCoin: textController.text)));
-                  //     },
-                  //     icon: Icons.search)
-                ],
+              IconButton(
+                onPressed: () {
+                  themeNotifier.isDark
+                      ? themeNotifier.isDark = false
+                      : themeNotifier.isDark = true;
+                },
+                icon: Icon(themeNotifier.isDark
+                    ? Icons.nightlight_rounded
+                    : Icons.wb_sunny),
+                color: themeNotifier.isDark
+                    ? Colors.grey.shade200
+                    : Colors.grey.shade600,
               )
             ],
           ),
-          bottomNavigationBar: BottomNavBar(),
+          bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
-              Column(
-                children: [
-                  Container(
-                      child: SearchBar()),
-                ],
-              ),
               SizedBox(
                 height: 50,
               ),
@@ -111,172 +110,244 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 50,
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: DataTable(
-                      dataRowHeight: 60,
-                      columnSpacing: 0,
-                      horizontalMargin: 0,
-                      columns: <DataColumn>[
-                        DataColumn(
-                          label: Container(
-                            width: width * .1,
-                            child: Text(
-                              '#',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade700,
-                                  fontSize: 11),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Container(
-                            width: width * .1,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Coin'.toUpperCase(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade700,
-                                  fontSize: 11),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Container(
-                            width: width * .2,
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              'Price'.toUpperCase(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade700,
-                                  fontSize: 11),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Container(
-                            width: width * .2,
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              '24H'.toUpperCase(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade700,
-                                  fontSize: 11),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Container(
-                            width: width * .4,
-                            alignment: Alignment.centerRight,
-                            padding: EdgeInsets.only(right: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  'Market Cap'.toUpperCase(),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey.shade700,
-                                      fontSize: 11),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                      // rows: dummyCoinList,
-                      rows: List<DataRow>.generate(test.length, (i) {
-                        return DataRow(
-                          cells: <DataCell>[
-                            DataCell(Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                '${i + 1}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey.shade600,
-                                    fontSize: 11),
-                              ),
-                            )),
-                            DataCell(Container(
-                              alignment: Alignment.centerLeft,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const SizedBox(
-                                    height: 4,
-                                  ),
-                                  Image.network('${test[i]['image']}',
-                                      width: 20, height: 20),
-                                  const SizedBox(
-                                    height: 4,
-                                  ),
-                                  Text(
-                                    '${test[i]['symbol']}'.toUpperCase(),
+              BlocBuilder(
+                  bloc: cubit,
+                  builder: (context, state) {
+                    if (state is CoinLoading) {
+                      return SkeletonLoader();
+                    }
+
+                    if (state is CoinLoaded) {
+                      return Expanded(
+                          child: SingleChildScrollView(
+                        child: DataTable(
+                            dataRowHeight: 60,
+                            columnSpacing: 0,
+                            horizontalMargin: 0,
+                            columns: <DataColumn>[
+                              DataColumn(
+                                label: Container(
+                                  width: width * .1,
+                                  child: Text(
+                                    '#',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey.shade900,
-                                        fontSize: 12),
+                                        fontWeight: FontWeight.bold,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
+                                        fontSize: 11),
                                   ),
-                                ],
+                                ),
                               ),
-                            )),
-                            DataCell(Container(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                '\$${NumberFormat("#,##0.00", "en_US").format(test[i]['current_price'].toDouble())}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey.shade900,
-                                    fontSize: 13),
-                              ),
-                            )),
-                            DataCell(Container(
-                              alignment: Alignment.centerRight,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Icon(
-                                    Icons.arrow_drop_up,
-                                    size: 20,
-                                    color: Colors.green,
-                                  ),
-                                  Text(
-                                    '${test[i]['price_change_percentage_24h_in_currency'].toDouble().toStringAsFixed(1)}%',
-                                    textAlign: TextAlign.right,
+                              DataColumn(
+                                label: Container(
+                                  width: width * .1,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Coin'.toUpperCase(),
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.green,
-                                        fontSize: 13),
+                                        fontWeight: FontWeight.bold,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
+                                        fontSize: 11),
                                   ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Container(
+                                  width: width * .2,
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    'Price'.toUpperCase(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
+                                        fontSize: 11),
+                                  ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Container(
+                                  width: width * .2,
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    '24H'.toUpperCase(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
+                                        fontSize: 11),
+                                  ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Container(
+                                  width: width * .4,
+                                  alignment: Alignment.centerRight,
+                                  padding: EdgeInsets.only(right: 20),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        'Market Cap'.toUpperCase(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: themeNotifier.isDark
+                                                ? Colors.white
+                                                : Colors.grey.shade700,
+                                            fontSize: 11),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                            rows: List<DataRow>.generate(state.coinModel.length,
+                                (i) {
+                              return DataRow(
+                                cells: <DataCell>[
+                                  DataCell(
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          '${i + 1}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: themeNotifier.isDark
+                                                  ? Colors.white
+                                                  : Colors.grey.shade600,
+                                              fontSize: 11),
+                                        ),
+                                      ), onTap: (() {
+                                    Navigator.pushNamed(
+                                        context, coindetailRoute,
+                                        arguments: state.coinModel[i]);
+                                  })),
+                                  DataCell(
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            const SizedBox(
+                                              height: 4,
+                                            ),
+                                            Image.network(
+                                                '${state.coinModel[i]['image']}',
+                                                width: 20,
+                                                height: 20),
+                                            const SizedBox(
+                                              height: 4,
+                                            ),
+                                            Text(
+                                              '${state.coinModel[i]['symbol']}'
+                                                  .toUpperCase(),
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  color: themeNotifier.isDark
+                                                      ? Colors.white
+                                                      : Colors.grey.shade900,
+                                                  fontSize: 12),
+                                            ),
+                                          ],
+                                        ),
+                                      ), onTap: (() {
+                                    Navigator.pushNamed(
+                                        context, coindetailRoute,
+                                        arguments: state.coinModel[i]);
+                                  })),
+                                  DataCell(
+                                      Container(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          '\$${NumberFormat("#,##0.00", "en_US").format(state.coinModel[i]['current_price'].toDouble())}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: themeNotifier.isDark
+                                                  ? Colors.white
+                                                  : Colors.grey.shade900,
+                                              fontSize: 13),
+                                        ),
+                                      ), onTap: (() {
+                                    Navigator.pushNamed(
+                                        context, coindetailRoute,
+                                        arguments: state.coinModel[i]);
+                                  })),
+                                  DataCell(
+                                      Container(
+                                        alignment: Alignment.centerRight,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            state.coinModel[i][
+                                                            'price_change_percentage_24h_in_currency']
+                                                        .toDouble() <=
+                                                    0
+                                                ? Icon(Icons.arrow_drop_down,
+                                                    size: 20, color: Colors.red)
+                                                : Icon(
+                                                    Icons.arrow_drop_up,
+                                                    size: 20,
+                                                    color: Colors.green,
+                                                  ),
+                                            Text(
+                                              '${state.coinModel[i]['price_change_percentage_24h_in_currency'].toDouble().toStringAsFixed(1)}%',
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  color: state.coinModel[i][
+                                                                  'price_change_percentage_24h_in_currency']
+                                                              .toDouble() <
+                                                          0
+                                                      ? Colors.red
+                                                      : Colors.green,
+                                                  fontSize: 13),
+                                            ),
+                                          ],
+                                        ),
+                                      ), onTap: (() {
+                                    Navigator.pushNamed(
+                                        context, coindetailRoute,
+                                        arguments: state.coinModel[i]);
+                                  })),
+                                  DataCell(
+                                      Container(
+                                        padding: EdgeInsets.only(right: 20),
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          '\$${NumberFormat('###,###,000').format(state.coinModel[i]['market_cap'])}',
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: themeNotifier.isDark
+                                                  ? Colors.white
+                                                  : Colors.grey.shade900,
+                                              fontSize: 13),
+                                        ),
+                                      ), onTap: (() {
+                                    Navigator.pushNamed(
+                                        context, coindetailRoute,
+                                        arguments: state.coinModel[i]);
+                                  })),
                                 ],
-                              ),
-                            )),
-                            DataCell(Container(
-                              padding: EdgeInsets.only(right: 20),
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                '\$${NumberFormat('###,###,000').format(test[i]['market_cap'])}',
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey.shade900,
-                                    fontSize: 13),
-                              ),
-                            )),
-                          ],
-                        );
-                      })),
-                ),
-              ),
+                              );
+                            })),
+                      ));
+                    }
+                    return Text(state is CoinError
+                        ? state.errorMessage
+                        : 'Unknown error');
+                  }),
             ],
           ));
     });

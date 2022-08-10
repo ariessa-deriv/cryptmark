@@ -1,456 +1,451 @@
+import 'dart:convert';
+
 import 'package:cryptmark/widgets/application_bar.dart';
 import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../theme/theme_model.dart';
 
 class CoinDetail extends StatefulWidget {
-  const CoinDetail({Key? key}) : super(key: key);
+  final Map coinDetail;
+  const CoinDetail({Key? key, required this.coinDetail}) : super(key: key);
 
   @override
   State<CoinDetail> createState() => _CoinDetailState();
 }
 
 class _CoinDetailState extends State<CoinDetail> {
-  var dummyCoinList = List<DataRow>.generate(20, (i) {
-    return DataRow(
-      cells: <DataCell>[
-        DataCell(Container(
-          alignment: Alignment.center,
-          child: Text(
-            '${i + 1}',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.grey.shade600,
-                fontSize: 11),
-          ),
-        )),
-        DataCell(Container(
-          alignment: Alignment.centerLeft,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 4,
-              ),
-              Image.network(
-                  'https://assets.coingecko.com/coins/images/1/large/bitcoin.png',
-                  width: 20,
-                  height: 20),
-              const SizedBox(
-                height: 4,
-              ),
-              Text(
-                'BTC'.toUpperCase(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey.shade900,
-                    fontSize: 12),
-              ),
-            ],
-          ),
-        )),
-        DataCell(Container(
-          alignment: Alignment.centerRight,
-          child: Text(
-            '\$24,161.29',
-            style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.grey.shade900,
-                fontSize: 13),
-          ),
-        )),
-        DataCell(Container(
-          alignment: Alignment.centerRight,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Icon(
-                Icons.arrow_drop_up,
-                size: 20,
-                color: Colors.green,
-              ),
-              Text(
-                '4.7%',
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.green,
-                    fontSize: 13),
-              ),
-            ],
-          ),
-        )),
-        DataCell(Container(
-          padding: EdgeInsets.only(right: 20),
-          alignment: Alignment.centerRight,
-          child: Text(
-            '\$462,264,292,650',
-            textAlign: TextAlign.right,
-            style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.grey.shade900,
-                fontSize: 13),
-          ),
-        )),
-      ],
-    );
-  });
+  List<String> currentWatchlist = [];
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.network(
-                'https://assets.coingecko.com/coins/images/1/large/bitcoin.png',
-                width: 20,
-                height: 20),
-            SizedBox(width: 20),
-            Text("Bitcoin",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.grey.shade700)),
-            SizedBox(
-              width: 5,
-            ),
-            Text("(BTC)",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.grey.shade500)),
-          ],
-        ),
-        backgroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.star_border_outlined,
-              color: Colors.black,
-            ),
-            onPressed: () {},
-          )
-        ],
-        leading: IconButton(
-          icon: Icon(
-            Icons.keyboard_arrow_left,
-            color: Colors.black,
-          ),
-          onPressed: () {},
-        ),
-      ),
-      body: Column(
-        children: [
-          SizedBox(height: 40),
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(left: 20),
-            child: Text(
-              '\$23,980.00',
-              style: TextStyle(fontSize: 50, fontWeight: FontWeight.w700),
-            ),
-          ),
-          // Container(
-          //   alignment: Alignment.centerLeft,
-          //   padding: EdgeInsets.only(left: 20),
-          //   color: Colors.grey.shade100,
-          //   child: Row(
-          //     children: [
-          //       Icon(Icons.arrow_drop_up),
-          //       Text('3.1%'),
-          //     ],
-          //   ),
-          // ),
-          SizedBox(height: 10),
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(left: 20),
-            child: SizedBox(
-              width: 60,
-              height: 30,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(
-                      color: Colors.grey.shade200,
-                    )),
-                child: Row(
-                  children: [
-                    Icon(Icons.arrow_drop_up, color: Colors.green),
-                    Text(
-                      '3.1%',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 20),
-          Container(
-            margin: EdgeInsets.all(20),
-            padding: EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5), color: Colors.white),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Market Cap',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey.shade500,
-                                fontSize: 15)),
-                        Text('\$462,264,292,650',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey.shade700,
-                                fontSize: 15))
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    height: 40,
-                    thickness: 2,
-                    indent: 0,
-                    endIndent: 0,
-                    color: Colors.grey.shade300,
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Trading Volume',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey.shade500,
-                                fontSize: 15)),
-                        Text('\$462,264,292,650',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey.shade700,
-                                fontSize: 15))
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    height: 40,
-                    thickness: 2,
-                    indent: 0,
-                    endIndent: 0,
-                    color: Colors.grey.shade300,
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Circulating Supply',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey.shade500,
-                                fontSize: 15)),
-                        Text('\$462,264,292,650',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey.shade700,
-                                fontSize: 15))
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    height: 40,
-                    thickness: 2,
-                    indent: 0,
-                    endIndent: 0,
-                    color: Colors.grey.shade300,
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Total Supply',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey.shade500,
-                                fontSize: 15)),
-                        Text('\$462,264,292,650',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey.shade700,
-                                fontSize: 15))
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    height: 40,
-                    thickness: 2,
-                    indent: 0,
-                    endIndent: 0,
-                    color: Colors.grey.shade300,
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Max Supply',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey.shade500,
-                                fontSize: 15)),
-                        Text('\$462,264,292,650',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey.shade700,
-                                fontSize: 15))
-                      ],
-                    ),
-                  ),
-                ]),
-          )
-        ],
-      ),
-    );
+  // Get watchlist from SharedPreferences
+  Future<void> getWatchlistFromSharedPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String>? watchlist = prefs.getStringList('watchlist');
+
+    if (watchlist == null) {
+      setState(() {
+        currentWatchlist = [];
+      });
+    } else {
+      setState(() {
+        currentWatchlist = watchlist;
+      });
+    }
   }
-}
 
-class InfoCard extends StatelessWidget {
-  final String title;
-  final String body;
-  final Function() onMoreTap;
+  // Add coin to watchlist
+  Future<void> addCoinToWatchlist(dynamic coinDetail) async {
+    // Create an instance of SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
 
-  final String subInfoTitle;
-  final String subInfoText;
-  final Widget subIcon;
+    // Add coin to local watchlist
+    setState(() {
+      currentWatchlist.add(json.encode(coinDetail));
+    });
 
-  const InfoCard(
-      {required this.title,
-      this.body =
-          """Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudi conseqr!""",
-      required this.onMoreTap,
-      this.subIcon = const CircleAvatar(
-        child: Icon(
-          Icons.directions,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.orange,
-        radius: 25,
-      ),
-      this.subInfoText = "545 miles",
-      this.subInfoTitle = "Directions",
-      Key? key})
-      : super(key: key);
+    // Update watchlist value in SharedPreferences
+    prefs.setStringList('watchlist', currentWatchlist);
+  }
+
+  // Remove coin from watchlist
+  Future<void> removeCoinFromWatchlist(dynamic coinDetail) async {
+    // Create an instance of SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+
+    // Remove coin from local watchlist
+    setState(() {
+      currentWatchlist.removeWhere(
+          (element) => json.decode(element)['symbol'] == coinDetail['symbol']);
+    });
+
+    // Update watchlist value in SharedPreferences
+    prefs.setStringList('watchlist', currentWatchlist);
+  }
+
+  // Check if coin exists in watchlist or not
+  bool doesCoinExists(coin) {
+    // If coin exists in watchlist, return true
+    if (currentWatchlist
+            .where((item) => json.decode(item)['symbol'] == coin)
+            .length >
+        0) {
+      return true;
+    }
+    // Else, return false
+    return false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    getWatchlistFromSharedPrefs();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(25.0),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(.05),
-              offset: Offset(0, 10),
-              blurRadius: 0,
-              spreadRadius: 0,
-            )
-          ],
-          gradient: RadialGradient(
-            colors: [Colors.orangeAccent, Colors.orange],
-            focal: Alignment.topCenter,
-            radius: .85,
-          )),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold),
-              ),
-              Container(
-                width: 75,
-                height: 30,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100.0),
-                  gradient: LinearGradient(
-                      colors: [Colors.white, Colors.white],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter),
+    return Consumer(
+      builder: (context, ThemeModel themeNotifier, child) {
+        return Scaffold(
+          backgroundColor: themeNotifier.isDark
+              ? Colors.grey.shade900
+              : Color.fromARGB(245, 255, 255, 255),
+          appBar: AppBar(
+            backgroundColor: themeNotifier.isDark
+                ? Colors.grey.shade800
+                : Colors.grey.shade200,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.network('${widget.coinDetail['image']}',
+                    width: 20, height: 20),
+                SizedBox(width: 20),
+                widget.coinDetail['name'].toString().length >= 10
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("${widget.coinDetail['name']}",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: themeNotifier.isDark
+                                      ? Colors.white
+                                      : Colors.grey.shade700)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                              "(${widget.coinDetail['symbol'].toString().toUpperCase()})",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: themeNotifier.isDark
+                                      ? Colors.grey.shade500
+                                      : Colors.grey.shade600)),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          Text("${widget.coinDetail['name']}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: themeNotifier.isDark
+                                      ? Colors.white
+                                      : Colors.grey.shade700)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                              "(${widget.coinDetail['symbol'].toString().toUpperCase()})",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: themeNotifier.isDark
+                                      ? Colors.grey.shade500
+                                      : Colors.grey.shade600)),
+                        ],
+                      ),
+              ],
+            ),
+            actions: [
+              IconButton(
+                icon: Icon(
+                  doesCoinExists(widget.coinDetail['symbol'])
+                      ? Icons.star
+                      : Icons.star_border,
+                  color: doesCoinExists(widget.coinDetail['symbol'])
+                      ? Colors.yellow
+                      : Colors.grey.shade400,
                 ),
-                child: GestureDetector(
-                  onTap: onMoreTap,
-                  child: Center(
-                      child: Text(
-                    "More",
-                    style: TextStyle(color: Colors.orange),
-                  )),
-                ),
+                onPressed: () {
+                  // If coin exists, remove coin from watchlist
+                  // Else, add coin to watchlist
+                  doesCoinExists(widget.coinDetail['symbol'])
+                      ? removeCoinFromWatchlist(widget.coinDetail)
+                      : addCoinToWatchlist(widget.coinDetail);
+                },
               ),
             ],
-          ),
-          SizedBox(height: 10),
-          Text(
-            body,
-            style:
-                TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14),
-          ),
-          SizedBox(height: 15),
-          Container(
-            width: double.infinity,
-            height: 75,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25.0),
-              color: Colors.white,
+            leading: IconButton(
+              icon: Icon(
+                Icons.keyboard_arrow_left,
+                color:
+                    themeNotifier.isDark ? Colors.white : Colors.grey.shade800,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  subIcon,
-                  SizedBox(width: 10),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+          ),
+          body: Column(
+            children: [
+              SizedBox(height: 40),
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(left: 20),
+                child: Text(
+                  '\$${NumberFormat("#,##0.00", "en_US").format(widget.coinDetail['current_price'].toDouble())}',
+                  style: TextStyle(fontSize: 50, fontWeight: FontWeight.w700),
+                ),
+              ),
+              SizedBox(height: 10),
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(left: 20),
+                child: SizedBox(
+                  width: 60,
+                  height: 30,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: themeNotifier.isDark
+                              ? Colors.grey.shade800
+                              : Colors.grey.shade300,
+                        )),
+                    child: Row(
+                      children: [
+                        widget.coinDetail[
+                                        'price_change_percentage_24h_in_currency']
+                                    .toDouble() <=
+                                0
+                            ? Icon(Icons.arrow_drop_down,
+                                size: 20, color: Colors.red)
+                            : Icon(
+                                Icons.arrow_drop_up,
+                                size: 20,
+                                color: Colors.green,
+                              ),
+                        Text(
+                          '${widget.coinDetail['price_change_percentage_24h_in_currency'].toDouble().toStringAsFixed(1)}%',
+                          style: TextStyle(
+                            color: widget.coinDetail[
+                                            'price_change_percentage_24h_in_currency']
+                                        .toDouble() <
+                                    0
+                                ? Colors.red
+                                : Colors.green,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Container(
+                margin: EdgeInsets.all(20),
+                padding: EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: themeNotifier.isDark
+                      ? Color.fromARGB(255, 47, 46, 46)
+                      : Colors.white,
+                ),
+                child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(subInfoTitle),
-                      Text(
-                        subInfoText,
-                        style: TextStyle(
-                          color: Colors.orange,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Market Cap',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: themeNotifier.isDark
+                                        ? Colors.grey.shade500
+                                        : Colors.grey.shade800,
+                                    fontSize: 15)),
+                            Text(
+                                '\$${NumberFormat('###,###,000').format(widget.coinDetail['market_cap'])}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade700,
+                                    fontSize: 15))
+                          ],
                         ),
                       ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
+                      Divider(
+                        height: 40,
+                        thickness: 2,
+                        indent: 0,
+                        endIndent: 0,
+                        color: themeNotifier.isDark
+                            ? Colors.grey.shade700
+                            : Colors.grey.shade500,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Trading Volume',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: themeNotifier.isDark
+                                        ? Colors.grey.shade500
+                                        : Colors.grey.shade800,
+                                    fontSize: 15)),
+                            Text(
+                                '\$${NumberFormat('###,###,000').format(widget.coinDetail['total_volume'])}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade700,
+                                    fontSize: 15))
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        height: 40,
+                        thickness: 2,
+                        indent: 0,
+                        endIndent: 0,
+                        color: themeNotifier.isDark
+                            ? Colors.grey.shade700
+                            : Colors.grey.shade500,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Circulating Supply',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: themeNotifier.isDark
+                                        ? Colors.grey.shade500
+                                        : Colors.grey.shade800,
+                                    fontSize: 15)),
+                            Text(
+                                '\$${NumberFormat('###,###,000').format(widget.coinDetail['circulating_supply'])}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade700,
+                                    fontSize: 15))
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        height: 40,
+                        thickness: 2,
+                        indent: 0,
+                        endIndent: 0,
+                        color: themeNotifier.isDark
+                            ? Colors.grey.shade700
+                            : Colors.grey.shade500,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Total Supply',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: themeNotifier.isDark
+                                        ? Colors.grey.shade500
+                                        : Colors.grey.shade800,
+                                    fontSize: 15)),
+                            Text(
+                                widget.coinDetail['total_supply'] == null
+                                    ? '?'
+                                    : '\$${NumberFormat('###,###,###,###,###,###,###,###,000').format(widget.coinDetail['total_supply'])}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade700,
+                                    fontSize: 15))
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        height: 40,
+                        thickness: 2,
+                        indent: 0,
+                        endIndent: 0,
+                        color: themeNotifier.isDark
+                            ? Colors.grey.shade700
+                            : Colors.grey.shade500,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('All Time High',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: themeNotifier.isDark
+                                        ? Colors.grey.shade500
+                                        : Colors.grey.shade800,
+                                    fontSize: 15)),
+                            Text(
+                                '\$${widget.coinDetail['ath'].toDouble().toStringAsFixed(2)}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade700,
+                                    fontSize: 15))
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        height: 40,
+                        thickness: 2,
+                        indent: 0,
+                        endIndent: 0,
+                        color: themeNotifier.isDark
+                            ? Colors.grey.shade700
+                            : Colors.grey.shade500,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('All Time Low',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: themeNotifier.isDark
+                                        ? Colors.grey.shade500
+                                        : Colors.grey.shade800,
+                                    fontSize: 15)),
+                            Text(
+                                '\$${widget.coinDetail['atl'].toDouble().toStringAsFixed(2)}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade700,
+                                    fontSize: 15))
+                          ],
+                        ),
+                      ),
+                    ]),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 }

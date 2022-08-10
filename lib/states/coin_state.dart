@@ -1,13 +1,13 @@
-import 'package:cryptmark/models/cryptmark_model.dart';
+import 'package:cryptmark/models/coin_model.dart';
 
 abstract class CoinState {}
 
 class CoinLoading extends CoinState {}
 
 class CoinLoaded extends CoinState {
-  final CryptmarkModel cryptmarkModel;
+  final List<dynamic> coinModel;
 
-  CoinLoaded({required this.cryptmarkModel});
+  CoinLoaded({required this.coinModel});
 }
 
 class CoinError extends CoinState {
