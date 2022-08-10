@@ -28,23 +28,35 @@ class _WatchlistPageState extends State<WatchlistPage> {
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
           appBar: AppBar(
-            backgroundColor:
-                themeNotifier.isDark ? Colors.grey : Colors.grey.shade100,
-            title: Text('Cryptmark'),
+            backgroundColor: themeNotifier.isDark
+                ? Colors.grey.shade800
+                : Colors.grey.shade200,
+            title: Text(
+              'Cryptmark',
+              style: TextStyle(
+                color: themeNotifier.isDark
+                    ? Colors.grey.shade200
+                    : Colors.grey.shade600,
+              ),
+            ),
             automaticallyImplyLeading: false,
             actions: <Widget>[
               IconButton(
-                  onPressed: () {
-                    themeNotifier.isDark
-                        ? themeNotifier.isDark = false
-                        : themeNotifier.isDark = true;
-                  },
-                  icon: Icon(themeNotifier.isDark
-                      ? Icons.nightlight_rounded
-                      : Icons.wb_sunny))
+                onPressed: () {
+                  themeNotifier.isDark
+                      ? themeNotifier.isDark = false
+                      : themeNotifier.isDark = true;
+                },
+                icon: Icon(themeNotifier.isDark
+                    ? Icons.nightlight_rounded
+                    : Icons.wb_sunny),
+                color: themeNotifier.isDark
+                    ? Colors.grey.shade200
+                    : Colors.grey.shade600,
+              ),
             ],
           ),
-          bottomNavigationBar: BottomNavBar(),
+          bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
               // Container(child: SearchBar()),
@@ -88,7 +100,9 @@ class _WatchlistPageState extends State<WatchlistPage> {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade700,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
                                         fontSize: 11),
                                   ),
                                 ),
@@ -101,7 +115,9 @@ class _WatchlistPageState extends State<WatchlistPage> {
                                     'Coin'.toUpperCase(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade700,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
                                         fontSize: 11),
                                   ),
                                 ),
@@ -114,7 +130,9 @@ class _WatchlistPageState extends State<WatchlistPage> {
                                     'Price'.toUpperCase(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade700,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
                                         fontSize: 11),
                                   ),
                                 ),
@@ -127,7 +145,9 @@ class _WatchlistPageState extends State<WatchlistPage> {
                                     '24H'.toUpperCase(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade700,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
                                         fontSize: 11),
                                   ),
                                 ),
@@ -144,7 +164,9 @@ class _WatchlistPageState extends State<WatchlistPage> {
                                         'Market Cap'.toUpperCase(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.grey.shade700,
+                                            color: themeNotifier.isDark
+                                                ? Colors.white
+                                                : Colors.grey.shade700,
                                             fontSize: 11),
                                       )
                                     ],
@@ -163,7 +185,9 @@ class _WatchlistPageState extends State<WatchlistPage> {
                                           '${i + 1}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.grey.shade600,
+                                              color: themeNotifier.isDark
+                                                  ? Colors.white
+                                                  : Colors.grey.shade600,
                                               fontSize: 11),
                                         ),
                                       ), onTap: (() {
@@ -196,7 +220,9 @@ class _WatchlistPageState extends State<WatchlistPage> {
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w500,
-                                                  color: Colors.grey.shade900,
+                                                  color: themeNotifier.isDark
+                                                      ? Colors.white
+                                                      : Colors.grey.shade900,
                                                   fontSize: 12),
                                             ),
                                           ],
@@ -213,7 +239,9 @@ class _WatchlistPageState extends State<WatchlistPage> {
                                           '\$${NumberFormat("#,##0.00", "en_US").format(state.coinModel[i]['current_price'].toDouble())}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w500,
-                                              color: Colors.grey.shade900,
+                                              color: themeNotifier.isDark
+                                                  ? Colors.white
+                                                  : Colors.grey.shade900,
                                               fontSize: 13),
                                         ),
                                       ), onTap: (() {
@@ -268,7 +296,9 @@ class _WatchlistPageState extends State<WatchlistPage> {
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w500,
-                                              color: Colors.grey.shade900,
+                                              color: themeNotifier.isDark
+                                                  ? Colors.white
+                                                  : Colors.grey.shade900,
                                               fontSize: 13),
                                         ),
                                       ), onTap: (() {

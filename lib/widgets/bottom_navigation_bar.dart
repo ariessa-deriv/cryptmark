@@ -1,8 +1,10 @@
 import 'package:cryptmark/routing/router.dart';
+import 'package:cryptmark/theme/theme_model.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({Key? key}) : super(key: key);
+  final ThemeModel themeNotifier;
+  const BottomNavBar({Key? key, required this.themeNotifier}) : super(key: key);
 
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
@@ -39,18 +41,20 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      backgroundColor: widget.themeNotifier.isDark
+          ? Colors.grey.shade800
+          : Colors.grey.shade200,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.show_chart,
-            color: Colors.grey.shade700,
-          ),
+          icon: Icon(Icons.show_chart, color: Colors.grey.shade500),
           label: 'Market',
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.star_border_outlined,
-            color: Colors.grey.shade700,
+            color: widget.themeNotifier.isDark
+                ? Colors.grey.shade200
+                : Colors.grey.shade800,
           ),
           label: 'Watchlist',
         ),
