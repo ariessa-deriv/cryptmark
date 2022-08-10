@@ -35,16 +35,10 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               onGenerateRoute: (settings) => generateRoute(settings),
               initialRoute: homeRoute,
-<<<<<<< HEAD
-              title: 'Flutter Demo',
-              theme:
-                  themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
-=======
               title: 'Cryptmark',
               theme: themeNotifier.isDark
                   ? ThemeData.dark()
                   : ThemeData(primaryColor: Colors.white),
->>>>>>> 1d4f79a4e33f9e4a72d8e130302c66323b0d8ccf
               home: HomePage());
         }));
   }
