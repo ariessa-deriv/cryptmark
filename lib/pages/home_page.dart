@@ -30,25 +30,35 @@ class _HomePageState extends State<HomePage> {
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
           appBar: AppBar(
-            backgroundColor:
-                themeNotifier.isDark ? Colors.grey : Colors.grey.shade400,
+            backgroundColor: themeNotifier.isDark
+                ? Colors.grey.shade800
+                : Colors.grey.shade200,
             title: Text(
               'Cryptmark',
+              style: TextStyle(
+                color: themeNotifier.isDark
+                    ? Colors.grey.shade200
+                    : Colors.grey.shade600,
+              ),
             ),
             automaticallyImplyLeading: false,
             actions: <Widget>[
               IconButton(
-                  onPressed: () {
-                    themeNotifier.isDark
-                        ? themeNotifier.isDark = false
-                        : themeNotifier.isDark = true;
-                  },
-                  icon: Icon(themeNotifier.isDark
-                      ? Icons.nightlight_rounded
-                      : Icons.wb_sunny))
+                onPressed: () {
+                  themeNotifier.isDark
+                      ? themeNotifier.isDark = false
+                      : themeNotifier.isDark = true;
+                },
+                icon: Icon(themeNotifier.isDark
+                    ? Icons.nightlight_rounded
+                    : Icons.wb_sunny),
+                color: themeNotifier.isDark
+                    ? Colors.grey.shade200
+                    : Colors.grey.shade600,
+              )
             ],
           ),
-          bottomNavigationBar: BottomNavBar(),
+          bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
               Container(child: SearchBar()),
