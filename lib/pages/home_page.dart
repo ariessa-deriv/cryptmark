@@ -31,8 +31,10 @@ class _HomePageState extends State<HomePage> {
       return Scaffold(
           appBar: AppBar(
             backgroundColor:
-                themeNotifier.isDark ? Colors.grey : Colors.grey.shade100,
-            title: Text('Cryptmark'),
+                themeNotifier.isDark ? Colors.grey : Colors.grey.shade400,
+            title: Text(
+              'Cryptmark',
+            ),
             automaticallyImplyLeading: false,
             actions: <Widget>[
               IconButton(
@@ -90,7 +92,9 @@ class _HomePageState extends State<HomePage> {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade700,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
                                         fontSize: 11),
                                   ),
                                 ),
@@ -103,7 +107,9 @@ class _HomePageState extends State<HomePage> {
                                     'Coin'.toUpperCase(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade700,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
                                         fontSize: 11),
                                   ),
                                 ),
@@ -116,7 +122,9 @@ class _HomePageState extends State<HomePage> {
                                     'Price'.toUpperCase(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade700,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
                                         fontSize: 11),
                                   ),
                                 ),
@@ -129,7 +137,9 @@ class _HomePageState extends State<HomePage> {
                                     '24H'.toUpperCase(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade700,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
                                         fontSize: 11),
                                   ),
                                 ),
@@ -146,7 +156,9 @@ class _HomePageState extends State<HomePage> {
                                         'Market Cap'.toUpperCase(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.grey.shade700,
+                                            color: themeNotifier.isDark
+                                                ? Colors.white
+                                                : Colors.grey.shade700,
                                             fontSize: 11),
                                       )
                                     ],
@@ -165,7 +177,9 @@ class _HomePageState extends State<HomePage> {
                                           '${i + 1}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.grey.shade600,
+                                              color: themeNotifier.isDark
+                                                  ? Colors.white
+                                                  : Colors.grey.shade600,
                                               fontSize: 11),
                                         ),
                                       ), onTap: (() {
@@ -198,7 +212,9 @@ class _HomePageState extends State<HomePage> {
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w500,
-                                                  color: Colors.grey.shade900,
+                                                  color: themeNotifier.isDark
+                                                      ? Colors.white
+                                                      : Colors.grey.shade900,
                                                   fontSize: 12),
                                             ),
                                           ],
@@ -215,7 +231,9 @@ class _HomePageState extends State<HomePage> {
                                           '\$${NumberFormat("#,##0.00", "en_US").format(state.coinModel[i]['current_price'].toDouble())}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w500,
-                                              color: Colors.grey.shade900,
+                                              color: themeNotifier.isDark
+                                                  ? Colors.white
+                                                  : Colors.grey.shade900,
                                               fontSize: 13),
                                         ),
                                       ), onTap: (() {
@@ -270,7 +288,9 @@ class _HomePageState extends State<HomePage> {
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w500,
-                                              color: Colors.grey.shade900,
+                                              color: themeNotifier.isDark
+                                                  ? Colors.white
+                                                  : Colors.grey.shade900,
                                               fontSize: 13),
                                         ),
                                       ), onTap: (() {
