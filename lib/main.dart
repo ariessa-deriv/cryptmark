@@ -17,7 +17,10 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  runApp(BlocProvider(create: ((context) => CoinCubit())));
+  runApp(BlocProvider(
+    create: ((context) => CoinCubit()),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -32,10 +35,11 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               onGenerateRoute: (settings) => generateRoute(settings),
               initialRoute: homeRoute,
-              title: 'Flutter Demo',
-              theme:
-                  themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
-              home: CoinDetail());
+              title: 'Cryptmark',
+              theme: themeNotifier.isDark
+                  ? ThemeData.dark()
+                  : ThemeData(primaryColor: Colors.white),
+              home: HomePage());
         }));
   }
 }

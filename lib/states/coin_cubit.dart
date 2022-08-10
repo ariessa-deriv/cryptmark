@@ -12,7 +12,7 @@ class CoinCubit extends Cubit<CoinState> {
     emit(CoinLoading());
 
     try {
-      List<CoinModel> coinModel = await coinService.fetchCoinInformation();
+      List<dynamic> coinModel = await coinService.fetchCoinInformation();
       emit(CoinLoaded(coinModel: coinModel));
     } catch (e) {
       emit(CoinError(errorMessage: e.toString()));

@@ -1,104 +1,68 @@
+import 'dart:convert';
+
 import 'package:cryptmark/widgets/application_bar.dart';
 import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/theme_model.dart';
 
 class CoinDetail extends StatefulWidget {
-  const CoinDetail({Key? key}) : super(key: key);
+  final Map coinDetail;
+  const CoinDetail({Key? key, required this.coinDetail}) : super(key: key);
 
   @override
   State<CoinDetail> createState() => _CoinDetailState();
 }
 
 class _CoinDetailState extends State<CoinDetail> {
-  var dummyCoinList = List<DataRow>.generate(20, (i) {
-    return DataRow(
-      cells: <DataCell>[
-        DataCell(Container(
-          alignment: Alignment.center,
-          child: Text(
-            '${i + 1}',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.grey.shade600,
-                fontSize: 11),
-          ),
-        )),
-        DataCell(Container(
-          alignment: Alignment.centerLeft,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 4,
-              ),
-              Image.network(
-                  'https://assets.coingecko.com/coins/images/1/large/bitcoin.png',
-                  width: 20,
-                  height: 20),
-              const SizedBox(
-                height: 4,
-              ),
-              Text(
-                'BTC'.toUpperCase(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey.shade900,
-                    fontSize: 12),
-              ),
-            ],
-          ),
-        )),
-        DataCell(Container(
-          alignment: Alignment.centerRight,
-          child: Text(
-            '\$24,161.29',
-            style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.grey.shade900,
-                fontSize: 13),
-          ),
-        )),
-        DataCell(Container(
-          alignment: Alignment.centerRight,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Icon(
-                Icons.arrow_drop_up,
-                size: 20,
-                color: Colors.green,
-              ),
-              Text(
-                '4.7%',
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.green,
-                    fontSize: 13),
-              ),
-            ],
-          ),
-        )),
-        DataCell(Container(
-          padding: EdgeInsets.only(right: 20),
-          alignment: Alignment.centerRight,
-          child: Text(
-            '\$462,264,292,650',
-            textAlign: TextAlign.right,
-            style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.grey.shade900,
-                fontSize: 13),
-          ),
-        )),
-      ],
-    );
-  });
+  List<String>? watchList = [];
+
+  Future<void> addCoinToWatchlist(dynamic coinDetail) async {
+    print('coinDetail: $coinDetail');
+    // Create an instance of SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+
+    // Get current watchlist
+    List<String>? currentWatchlist = prefs.getStringList('watchlist');
+    print(currentWatchlist);
+
+    // Check if coin already exists in watchlist or not
+    if (!currentWatchlist!.contains(coinDetail)) {
+      // If coin does not exist in watchlist, add coin to watchlist
+      currentWatchlist.add(coinDetail);
+
+      // Update watchlist value in SharedPreferences
+      prefs.setString('watchList', jsonEncode(coinDetail));
+    }
+  }
+
+  Future<void> removeCoinToWatchlist(dynamic coinDetail) async {
+    // Create an instance of SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+
+    // Get current watchlist
+    List<String>? currentWatchlist = prefs.getStringList('watchlist');
+
+    // Check if coin already exists in watchlist or not
+    if (currentWatchlist!.contains(coinDetail)) {
+      // If coin exist in watchlist, remove coin from watchlist
+      currentWatchlist.removeWhere((element) => element == 'eth');
+
+      // Update watchlist value in SharedPreferences
+      prefs.setString('watchList', jsonEncode(coinDetail));
+    }
+  }
+
+  bool doesCoinExists(coin) {
+    // If coin exists in watchlist, return true
+    if (watchList!.where((element) => element == coin).length > 0) {
+      return true;
+    }
+    // Else, return false
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,12 +75,10 @@ class _CoinDetailState extends State<CoinDetail> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.network(
-                    'https://assets.coingecko.com/coins/images/1/large/bitcoin.png',
-                    width: 20,
-                    height: 20),
+                Image.network('${widget.coinDetail['image']}',
+                    width: 20, height: 20),
                 SizedBox(width: 20),
-                Text("Bitcoin",
+                Text("${widget.coinDetail['name']}",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
@@ -124,7 +86,8 @@ class _CoinDetailState extends State<CoinDetail> {
                 SizedBox(
                   width: 5,
                 ),
-                Text("(BTC)",
+                Text(
+                    "(${widget.coinDetail['symbol'].toString().toUpperCase()})",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
@@ -134,10 +97,20 @@ class _CoinDetailState extends State<CoinDetail> {
             actions: [
               IconButton(
                 icon: Icon(
-                  Icons.star_border_outlined,
-                  color: Colors.black,
+                  doesCoinExists(widget.coinDetail['symbol'])
+                      ? Icons.star
+                      : Icons.star_border,
+                  color: doesCoinExists(widget.coinDetail['symbol'])
+                      ? Colors.yellow
+                      : Colors.grey.shade400,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  // If coin exists, remove coin from watchlist
+                  // Else, add coin to watchlist
+                  doesCoinExists(widget.coinDetail['symbol'])
+                      ? removeCoinToWatchlist(widget.coinDetail)
+                      : addCoinToWatchlist(widget.coinDetail);
+                },
               ),
             ],
             leading: IconButton(
@@ -157,21 +130,10 @@ class _CoinDetailState extends State<CoinDetail> {
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.only(left: 20),
                 child: Text(
-                  '\$23,980.00',
+                  '\$${NumberFormat("#,##0.00", "en_US").format(widget.coinDetail['current_price'].toDouble())}',
                   style: TextStyle(fontSize: 50, fontWeight: FontWeight.w700),
                 ),
               ),
-              // Container(
-              //   alignment: Alignment.centerLeft,
-              //   padding: EdgeInsets.only(left: 20),
-              //   color: Colors.grey.shade100,
-              //   child: Row(
-              //     children: [
-              //       Icon(Icons.arrow_drop_up),
-              //       Text('3.1%'),
-              //     ],
-              //   ),
-              // ),
               SizedBox(height: 10),
               Container(
                 alignment: Alignment.centerLeft,
@@ -188,11 +150,26 @@ class _CoinDetailState extends State<CoinDetail> {
                         )),
                     child: Row(
                       children: [
-                        Icon(Icons.arrow_drop_up, color: Colors.green),
+                        widget.coinDetail[
+                                        'price_change_percentage_24h_in_currency']
+                                    .toDouble() <=
+                                0
+                            ? Icon(Icons.arrow_drop_down,
+                                size: 20, color: Colors.red)
+                            : Icon(
+                                Icons.arrow_drop_up,
+                                size: 20,
+                                color: Colors.green,
+                              ),
                         Text(
-                          '3.1%',
+                          '${widget.coinDetail['price_change_percentage_24h_in_currency'].toDouble().toStringAsFixed(1)}%',
                           style: TextStyle(
-                            color: Colors.green,
+                            color: widget.coinDetail[
+                                            'price_change_percentage_24h_in_currency']
+                                        .toDouble() <
+                                    0
+                                ? Colors.red
+                                : Colors.green,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -222,7 +199,8 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey.shade500,
                                     fontSize: 15)),
-                            Text('\$462,264,292,650',
+                            Text(
+                                '\$${NumberFormat('###,###,000').format(widget.coinDetail['market_cap'])}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey.shade700,
@@ -247,7 +225,8 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey.shade500,
                                     fontSize: 15)),
-                            Text('\$462,264,292,650',
+                            Text(
+                                '\$${NumberFormat('###,###,000').format(widget.coinDetail['total_volume'])}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey.shade700,
@@ -272,7 +251,8 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey.shade500,
                                     fontSize: 15)),
-                            Text('\$462,264,292,650',
+                            Text(
+                                '\$${NumberFormat('###,###,000').format(widget.coinDetail['circulating_supply'])}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey.shade700,
@@ -297,7 +277,10 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey.shade500,
                                     fontSize: 15)),
-                            Text('\$462,264,292,650',
+                            Text(
+                                widget.coinDetail['total_supply'] == null
+                                    ? '?'
+                                    : '\$${NumberFormat('###,###,###,###,###,###,###,###,000').format(widget.coinDetail['total_supply'])}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey.shade700,
@@ -317,12 +300,37 @@ class _CoinDetailState extends State<CoinDetail> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Max Supply',
+                            Text('All Time High',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey.shade500,
                                     fontSize: 15)),
-                            Text('\$462,264,292,650',
+                            Text('\$${widget.coinDetail['ath']}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.grey.shade700,
+                                    fontSize: 15))
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        height: 40,
+                        thickness: 2,
+                        indent: 0,
+                        endIndent: 0,
+                        color: Colors.grey.shade300,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('All Time Low',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.grey.shade500,
+                                    fontSize: 15)),
+                            Text('\$${widget.coinDetail['atl']}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey.shade700,
@@ -336,132 +344,6 @@ class _CoinDetailState extends State<CoinDetail> {
           ),
         );
       },
-    );
-  }
-}
-
-class InfoCard extends StatelessWidget {
-  final String title;
-  final String body;
-  final Function() onMoreTap;
-
-  final String subInfoTitle;
-  final String subInfoText;
-  final Widget subIcon;
-
-  const InfoCard(
-      {required this.title,
-      this.body =
-          """Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudi conseqr!""",
-      required this.onMoreTap,
-      this.subIcon = const CircleAvatar(
-        child: Icon(
-          Icons.directions,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.orange,
-        radius: 25,
-      ),
-      this.subInfoText = "545 miles",
-      this.subInfoTitle = "Directions",
-      Key? key})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(25.0),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(.05),
-              offset: Offset(0, 10),
-              blurRadius: 0,
-              spreadRadius: 0,
-            )
-          ],
-          gradient: RadialGradient(
-            colors: [Colors.orangeAccent, Colors.orange],
-            focal: Alignment.topCenter,
-            radius: .85,
-          )),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold),
-              ),
-              Container(
-                width: 75,
-                height: 30,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100.0),
-                  gradient: LinearGradient(
-                      colors: [Colors.white, Colors.white],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter),
-                ),
-                child: GestureDetector(
-                  onTap: onMoreTap,
-                  child: Center(
-                      child: Text(
-                    "More",
-                    style: TextStyle(color: Colors.orange),
-                  )),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Text(
-            body,
-            style:
-                TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14),
-          ),
-          SizedBox(height: 15),
-          Container(
-            width: double.infinity,
-            height: 75,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25.0),
-              color: Colors.white,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  subIcon,
-                  SizedBox(width: 10),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(subInfoTitle),
-                      Text(
-                        subInfoText,
-                        style: TextStyle(
-                          color: Colors.orange,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
     );
   }
 }
