@@ -19,26 +19,53 @@ class CoinDetail extends StatefulWidget {
 class _CoinDetailState extends State<CoinDetail> {
   List<String>? watchList = [];
 
+  getWatchlist() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String>? watchlist = prefs.getStringList('watchlist');
+
+    if (watchList == null) {
+      return [];
+    } else {
+      return watchlist;
+    }
+  }
+
   Future<void> addCoinToWatchlist(dynamic coinDetail) async {
+    setState(() {
+      watchList?.add(json.encode(coinDetail));
+    });
+
     print('coinDetail: $coinDetail');
     // Create an instance of SharedPreferences
     final prefs = await SharedPreferences.getInstance();
 
+    List<String>? currentWatchlist = [];
+
     // Get current watchlist
-    List<String>? currentWatchlist = prefs.getStringList('watchlist');
-    print(currentWatchlist);
+    await getWatchlist().then((result) {
+      if (result != null) {
+        currentWatchlist = result;
+        // Check if coin already exists in watchlist or not
+        // if (!currentWatchlist.contains(coinDetail)) {
+        // If coin does not exist in watchlist, add coin to watchlist
+        currentWatchlist?.add(json.encode(coinDetail));
 
-    // Check if coin already exists in watchlist or not
-    if (!currentWatchlist!.contains(coinDetail)) {
-      // If coin does not exist in watchlist, add coin to watchlist
-      currentWatchlist.add(coinDetail);
+        // Update watchlist value in SharedPreferences
+        prefs.setStringList('watchlist', currentWatchlist!);
+        // }
+      } else {
+        currentWatchlist?.add(json.encode(coinDetail));
 
-      // Update watchlist value in SharedPreferences
-      prefs.setString('watchList', jsonEncode(coinDetail));
-    }
+        // Update watchlist value in SharedPreferences
+        prefs.setStringList('watchlist', currentWatchlist!);
+      }
+    });
   }
 
-  Future<void> removeCoinToWatchlist(dynamic coinDetail) async {
+  Future<void> removeCoinFromWatchlist(dynamic coinDetail) async {
+    setState(() {
+      // Remove coin from watchlist
+    });
     // Create an instance of SharedPreferences
     final prefs = await SharedPreferences.getInstance();
 
@@ -57,7 +84,7 @@ class _CoinDetailState extends State<CoinDetail> {
 
   bool doesCoinExists(coin) {
     // If coin exists in watchlist, return true
-    if (watchList!.where((element) => element == coin).length > 0) {
+    if (watchList!.isNotEmpty) {
       return true;
     }
     // Else, return false
@@ -66,6 +93,7 @@ class _CoinDetailState extends State<CoinDetail> {
 
   @override
   Widget build(BuildContext context) {
+    watchList = getWatchlist();
     return Consumer(
       builder: (context, ThemeModel themeNotifier, child) {
         return Scaffold(
@@ -78,20 +106,44 @@ class _CoinDetailState extends State<CoinDetail> {
                 Image.network('${widget.coinDetail['image']}',
                     width: 20, height: 20),
                 SizedBox(width: 20),
-                Text("${widget.coinDetail['name']}",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey.shade700)),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(
-                    "(${widget.coinDetail['symbol'].toString().toUpperCase()})",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey.shade500)),
+                widget.coinDetail['name'].toString().length >= 10
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("${widget.coinDetail['name']}",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade700)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                              "(${widget.coinDetail['symbol'].toString().toUpperCase()})",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade500)),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          Text("${widget.coinDetail['name']}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade700)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                              "(${widget.coinDetail['symbol'].toString().toUpperCase()})",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade500)),
+                        ],
+                      ),
               ],
             ),
             actions: [
@@ -108,7 +160,7 @@ class _CoinDetailState extends State<CoinDetail> {
                   // If coin exists, remove coin from watchlist
                   // Else, add coin to watchlist
                   doesCoinExists(widget.coinDetail['symbol'])
-                      ? removeCoinToWatchlist(widget.coinDetail)
+                      ? removeCoinFromWatchlist(widget.coinDetail)
                       : addCoinToWatchlist(widget.coinDetail);
                 },
               ),

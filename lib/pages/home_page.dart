@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: BottomNavBar(),
           body: Column(
             children: [
-              Container(child: SearchBar()),
+              // Container(child: SearchBar()),
               SizedBox(
                 height: 50,
               ),
