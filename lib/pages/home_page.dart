@@ -18,97 +18,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var dummyCoinList = List<DataRow>.generate(20, (i) {
-    return DataRow(cells: <DataCell>[
-      DataCell(
-        GestureDetector(
-          child: Container(
-            alignment: Alignment.center,
-            child: Text(
-              '${i + 1}',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey.shade600,
-                  fontSize: 11),
-            ),
-          ),
-        ),
-      ),
-      DataCell(Container(
-        alignment: Alignment.centerLeft,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 4,
-            ),
-            Image.network(
-                'https://assets.coingecko.com/coins/images/1/large/bitcoin.png',
-                width: 20,
-                height: 20),
-            const SizedBox(
-              height: 4,
-            ),
-            Text(
-              'BTC'.toUpperCase(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey.shade900,
-                  fontSize: 12),
-            ),
-          ],
-        ),
-      )),
-      DataCell(Container(
-        alignment: Alignment.centerRight,
-        child: Text(
-          '\$24,161.29',
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              color: Colors.grey.shade900,
-              fontSize: 13),
-        ),
-      )),
-      DataCell(Container(
-        alignment: Alignment.centerRight,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Icon(
-              Icons.arrow_drop_up,
-              size: 20,
-              color: Colors.green,
-            ),
-            Text(
-              '4.7%',
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.green,
-                  fontSize: 13),
-            ),
-          ],
-        ),
-      )),
-      DataCell(Container(
-        padding: EdgeInsets.only(right: 20),
-        alignment: Alignment.centerRight,
-        child: Text(
-          '\$462,264,292,650',
-          textAlign: TextAlign.right,
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              color: Colors.grey.shade900,
-              fontSize: 13),
-        ),
-      )),
-    ]);
-  });
-
-  String coinsList =
-      "bitcoin,ethereum,tether,usd-coin,binancecoin,binance-usd,ripple,cardano,solana,dogecoin,polkadot,matic-network,defichain,dai,avalanche-2,tron,staked-ether,wrapped-bitcoin,leo-token,litecoin,ftx-token,okb,uniswap,crypto-com-chain,chainlink,ethereum-classic,near,stellar,cosmos,monero,algorand,bitcoin-cash,flow,vechain,chain-2,apecoin,theta-fuel,internet-computer,the-sandbox,decentraland,hedera-hashgraph,tezos,filecoin,quant-network,axie-infinity,frax,elrond-erd-2,aave,theta-token,true-usd";
   List<dynamic> test = [];
   Future<void> fetchAPi() async {
     final Uri url = Uri(
@@ -121,7 +30,6 @@ class _HomePageState extends State<HomePage> {
         'per_page': '50',
         'page': '1',
         'price_change_percentage': '1h,24h,7d',
-        'ids': coinsList
       },
     );
     http.Response response = await http.get(url);
@@ -275,7 +183,9 @@ class _HomePageState extends State<HomePage> {
                                     '${i + 1}',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade600,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade600,
                                         fontSize: 11),
                                   ),
                                 ), onTap: (() {
@@ -303,7 +213,9 @@ class _HomePageState extends State<HomePage> {
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
-                                            color: Colors.grey.shade900,
+                                            color: themeNotifier.isDark
+                                                ? Colors.white
+                                                : Colors.grey.shade900,
                                             fontSize: 12),
                                       ),
                                     ],
@@ -319,7 +231,9 @@ class _HomePageState extends State<HomePage> {
                                     '\$${NumberFormat("#,##0.00", "en_US").format(test[i]['current_price'].toDouble())}',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.grey.shade900,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade900,
                                         fontSize: 13),
                                   ),
                                 ), onTap: (() {
@@ -370,7 +284,9 @@ class _HomePageState extends State<HomePage> {
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.grey.shade900,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade900,
                                         fontSize: 13),
                                   ),
                                 ), onTap: (() {

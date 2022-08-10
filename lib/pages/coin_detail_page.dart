@@ -181,7 +181,6 @@ class _CoinDetailState extends State<CoinDetail> {
                   height: 30,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
                         borderRadius: BorderRadius.circular(5),
                         border: Border.all(
                           color: Colors.grey.shade200,

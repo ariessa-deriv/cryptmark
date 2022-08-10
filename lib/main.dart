@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
               title: 'Flutter Demo',
               theme:
                   themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
-              home: CoinDetail());
+              home: HomePage());
         }));
   }
 }
