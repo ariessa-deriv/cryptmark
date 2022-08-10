@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/coin_model.dart';
 
 class CoinService {
-  Future<List<CoinModel>> fetchCoinInformation() async {
+  Future<List<dynamic>> fetchCoinInformation() async {
     final Uri url = Uri(
       scheme: 'https',
       host: 'api.coingecko.com',
@@ -21,9 +21,9 @@ class CoinService {
     http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {
-      return List<CoinModel>.from(jsonDecode(response.body));
+      return List<dynamic>.from(jsonDecode(response.body));
     } else {
-      throw Exception('Failed to load weather information.');
+      throw Exception('Failed to load coins information.');
     }
   }
 }

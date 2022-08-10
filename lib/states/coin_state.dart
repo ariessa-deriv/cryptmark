@@ -5,7 +5,7 @@ abstract class CoinState {}
 class CoinLoading extends CoinState {}
 
 class CoinLoaded extends CoinState {
-  final List<CoinModel> coinModel;
+  final List<dynamic> coinModel;
 
   CoinLoaded({required this.coinModel});
 }
