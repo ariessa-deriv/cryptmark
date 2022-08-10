@@ -111,7 +111,7 @@ class _CoinDetailState extends State<CoinDetail> {
                       : Icons.star_border,
                   color: doesCoinExists(widget.coinDetail['symbol'])
                       ? Colors.yellow
-                      : Colors.grey.shade400,
+                      : Colors.grey.shade600,
                 ),
                 onPressed: () {
                   // If coin exists, remove coin from watchlist
@@ -213,7 +213,7 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w600,
                                     color: themeNotifier.isDark
                                         ? Colors.grey.shade500
-                                        : Colors.grey.shade800,
+                                        : Colors.grey.shade700,
                                     fontSize: 15)),
                             Text(
                                 '\$${NumberFormat('###,###,000').format(widget.coinDetail['market_cap'])}',
@@ -221,7 +221,7 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w500,
                                     color: themeNotifier.isDark
                                         ? Colors.white
-                                        : Colors.grey.shade700,
+                                        : Colors.grey.shade900,
                                     fontSize: 15))
                           ],
                         ),
@@ -245,7 +245,7 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w600,
                                     color: themeNotifier.isDark
                                         ? Colors.grey.shade500
-                                        : Colors.grey.shade800,
+                                        : Colors.grey.shade700,
                                     fontSize: 15)),
                             Text(
                                 '\$${NumberFormat('###,###,000').format(widget.coinDetail['total_volume'])}',
@@ -253,7 +253,7 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w500,
                                     color: themeNotifier.isDark
                                         ? Colors.white
-                                        : Colors.grey.shade700,
+                                        : Colors.grey.shade900,
                                     fontSize: 15))
                           ],
                         ),
@@ -277,7 +277,7 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w600,
                                     color: themeNotifier.isDark
                                         ? Colors.grey.shade500
-                                        : Colors.grey.shade800,
+                                        : Colors.grey.shade700,
                                     fontSize: 15)),
                             Text(
                                 '\$${NumberFormat('###,###,000').format(widget.coinDetail['circulating_supply'])}',
@@ -285,7 +285,7 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w500,
                                     color: themeNotifier.isDark
                                         ? Colors.white
-                                        : Colors.grey.shade700,
+                                        : Colors.grey.shade900,
                                     fontSize: 15))
                           ],
                         ),
@@ -309,7 +309,7 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w600,
                                     color: themeNotifier.isDark
                                         ? Colors.grey.shade500
-                                        : Colors.grey.shade800,
+                                        : Colors.grey.shade700,
                                     fontSize: 15)),
                             Text(
                                 widget.coinDetail['total_supply'] == null
@@ -319,7 +319,7 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w500,
                                     color: themeNotifier.isDark
                                         ? Colors.white
-                                        : Colors.grey.shade700,
+                                        : Colors.grey.shade900,
                                     fontSize: 15))
                           ],
                         ),
@@ -343,14 +343,14 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w600,
                                     color: themeNotifier.isDark
                                         ? Colors.grey.shade500
-                                        : Colors.grey.shade800,
+                                        : Colors.grey.shade700,
                                     fontSize: 15)),
                             Text('\$${widget.coinDetail['ath']}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: themeNotifier.isDark
                                         ? Colors.white
-                                        : Colors.grey.shade700,
+                                        : Colors.grey.shade900,
                                     fontSize: 15))
                           ],
                         ),
@@ -374,14 +374,14 @@ class _CoinDetailState extends State<CoinDetail> {
                                     fontWeight: FontWeight.w600,
                                     color: themeNotifier.isDark
                                         ? Colors.grey.shade500
-                                        : Colors.grey.shade800,
+                                        : Colors.grey.shade700,
                                     fontSize: 15)),
                             Text('\$${widget.coinDetail['atl']}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: themeNotifier.isDark
                                         ? Colors.white
-                                        : Colors.grey.shade700,
+                                        : Colors.grey.shade900,
                                     fontSize: 15))
                           ],
                         ),
