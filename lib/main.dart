@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cryptmark/models/cryptmark_model.dart';
 import 'package:cryptmark/services/cryptmark_service.dart';
 import 'package:cryptmark/pages/coin_detail_page.dart';

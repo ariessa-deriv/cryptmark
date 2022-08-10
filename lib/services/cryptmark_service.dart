@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-
 import '../models/cryptmark_model.dart'; // import it as http
 
 class CryptmarkService {

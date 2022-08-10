@@ -1,88 +1,78 @@
 import 'dart:convert';
-import 'package:cryptmark/pages/search_page.dart';
-import 'package:cryptmark/theme/theme_model.dart';
-import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
 import 'package:cryptmark/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
+import '../theme/theme_model.dart';
+import '../widgets/bottom_navigation_bar.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class SearchPage extends StatefulWidget {
+  const SearchPage({Key? key, required this.searchCoin}) : super(key: key);
+  final String searchCoin;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<SearchPage> createState() => _SearchPageState();
 }
-class _HomePageState extends State<HomePage> {
 
-  List<dynamic> test = [];
+class _SearchPageState extends State<SearchPage> {
+
+  List<dynamic> search = [];
   late final String coinName;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    fetchAPi();
+    fetchSearch(coinID: widget.searchCoin);
   }
 
-  Future<void> fetchAPi({String? coinID}) async {
+  Future<void> fetchSearch({String? coinID}) async {
     final Uri url = Uri(
       scheme: 'https',
       host: 'api.coingecko.com',
       path: 'api/v3/coins/markets',
       queryParameters: {
-        'ids': coinID,
-        'vs_currency': 'usd',
-        'order': 'market_cap_desc',
-        'per_page': '50',
-        'page': '1',
-        'price_change_percentage': '1h,24h,7d'
+    'ids': coinID,
+    'vs_currency': 'usd',
+    'order': 'market_cap_desc',
+    'per_page': '50',
+    'page': '1',
+    'price_change_percentage': '1h,24h,7d',
+    //'query': widget.searchCoin,
       },
     );
     http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {
-      var testResponse = jsonDecode(response.body);
-      print(testResponse.runtimeType);
+      var searchResponse = jsonDecode(response.body);
+      print(searchResponse.runtimeType);
       setState(() {
-        test = testResponse;
+        search = searchResponse;
       });
     } else {
-      throw Exception('Failed to load coin information.');
+      throw Exception('Failed to load search information.');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // SearchCubit cubit = BlocProvider.of<SearchCubit>(context);
     final double width = MediaQuery.of(context).size.width;
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
           appBar: AppBar(
-            title: Text('Cryptmark'),
+            title: Text('Search'),
             automaticallyImplyLeading: false,
             actions: <Widget>[
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        themeNotifier.isDark
-                            ? themeNotifier.isDark = false
-                            : themeNotifier.isDark = true;
-                      },
-                      icon: Icon(themeNotifier.isDark
-                          ? Icons.nightlight_rounded
-                          : Icons.wb_sunny)),
-                  // IconButton(
-                  //     onPressed: () {
-                  //       Navigator.push(context, MaterialPageRoute(
-                  //           builder: (context) => SearchPage(
-                  //               searchCoin: textController.text)));
-                  //     },
-                  //     icon: Icons.search)
-                ],
-              )
+              IconButton(
+                  onPressed: () {
+                    themeNotifier.isDark
+                        ? themeNotifier.isDark = false
+                        : themeNotifier.isDark = true;
+                  },
+                  icon: Icon(themeNotifier.isDark
+                      ? Icons.nightlight_rounded
+                      : Icons.wb_sunny))
             ],
           ),
           bottomNavigationBar: BottomNavBar(),
@@ -91,21 +81,22 @@ class _HomePageState extends State<HomePage> {
               Column(
                 children: [
                   Container(
-                      child: SearchBar()),
+                    child: SearchBar(),
+                  ),
                 ],
               ),
               SizedBox(
                 height: 50,
               ),
               Text(
-                'Homepage',
+                'Searched Coin',
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: 20,
               ),
               Text(
-                'Display prices of 50 cryptocurrencies',
+                'Display prices of searched cryptocurrencies',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
               ),
               SizedBox(
@@ -191,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                       // rows: dummyCoinList,
-                      rows: List<DataRow>.generate(test.length, (i) {
+                      rows: List<DataRow>.generate(search.length, (i) {
                         return DataRow(
                           cells: <DataCell>[
                             DataCell(Container(
@@ -213,13 +204,13 @@ class _HomePageState extends State<HomePage> {
                                   const SizedBox(
                                     height: 4,
                                   ),
-                                  Image.network('${test[i]['image']}',
+                                  Image.network('${search[i]['image']}',
                                       width: 20, height: 20),
                                   const SizedBox(
                                     height: 4,
                                   ),
                                   Text(
-                                    '${test[i]['symbol']}'.toUpperCase(),
+                                    '${search[i]['symbol']}'.toUpperCase(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
@@ -232,7 +223,7 @@ class _HomePageState extends State<HomePage> {
                             DataCell(Container(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                '\$${NumberFormat("#,##0.00", "en_US").format(test[i]['current_price'].toDouble())}',
+                                '\$${NumberFormat("#,##0.00", "en_US").format(search[i]['current_price'].toDouble())}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: Colors.grey.shade900,
@@ -250,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.green,
                                   ),
                                   Text(
-                                    '${test[i]['price_change_percentage_24h_in_currency'].toDouble().toStringAsFixed(1)}%',
+                                    '${search[i]['price_change_percentage_24h_in_currency'].toDouble().toStringAsFixed(1)}%',
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
@@ -264,7 +255,7 @@ class _HomePageState extends State<HomePage> {
                               padding: EdgeInsets.only(right: 20),
                               alignment: Alignment.centerRight,
                               child: Text(
-                                '\$${NumberFormat('###,###,000').format(test[i]['market_cap'])}',
+                                '\$${NumberFormat('###,###,000').format(search[i]['market_cap'])}',
                                 textAlign: TextAlign.right,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,

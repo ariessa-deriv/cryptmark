@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class CoinCubit extends Cubit<CoinState> {
   CoinCubit() : super(CoinLoading());
 
-  Future<void> fetchWeather(String cityName) async {
+  Future<void> fetchCryptmark(String cityName) async {            //
     CryptmarkService coinService = CryptmarkService();
 
     emit(CoinLoading());
