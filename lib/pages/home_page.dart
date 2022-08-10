@@ -14,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,9 +24,40 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late CoinCubit cubit;
+  List<String> currentWatchlist = [];
+
+  // Get watchlist from SharedPreferences
+  Future<void> getWatchlistFromSharedPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String>? watchlist = prefs.getStringList('watchlist');
+
+    if (watchlist == null) {
+      setState(() {
+        currentWatchlist = [];
+      });
+    } else {
+      setState(() {
+        currentWatchlist = watchlist;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // TODO: Fetch coins from API only if cubit has no value
+
+    // Fetch coins from API
+    cubit = BlocProvider.of<CoinCubit>(context)..fetchCoins();
+
+    // Get watchlist from SharedPreferences
+    getWatchlistFromSharedPrefs();
+  }
+
   @override
   Widget build(BuildContext context) {
-    CoinCubit cubit = BlocProvider.of<CoinCubit>(context)..fetchCoins();
     final double width = MediaQuery.of(context).size.width;
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
@@ -70,7 +102,6 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
-              Container(child: SearchBar()),
               SizedBox(
                 height: 50,
               ),

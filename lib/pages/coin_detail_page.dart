@@ -17,51 +17,71 @@ class CoinDetail extends StatefulWidget {
 }
 
 class _CoinDetailState extends State<CoinDetail> {
-  List<String>? watchList = [];
+  List<String> currentWatchlist = [];
 
+  // Get watchlist from SharedPreferences
+  Future<void> getWatchlistFromSharedPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String>? watchlist = prefs.getStringList('watchlist');
+
+    if (watchlist == null) {
+      setState(() {
+        currentWatchlist = [];
+      });
+    } else {
+      setState(() {
+        currentWatchlist = watchlist;
+      });
+    }
+  }
+
+  // Add coin to watchlist
   Future<void> addCoinToWatchlist(dynamic coinDetail) async {
-    print('coinDetail: $coinDetail');
     // Create an instance of SharedPreferences
     final prefs = await SharedPreferences.getInstance();
 
-    // // Get current watchlist
-    // List<String>? currentWatchlist = prefs.getStringList('watchlist');
-    // print(currentWatchlist);
+    // Add coin to local watchlist
+    setState(() {
+      currentWatchlist.add(json.encode(coinDetail));
+    });
 
-    // // Check if coin already exists in watchlist or not
-    // if (!currentWatchlist!.contains(coinDetail)) {
-    //   // If coin does not exist in watchlist, add coin to watchlist
-    //   currentWatchlist.add(coinDetail);
-
-    //   // Update watchlist value in SharedPreferences
-    //   prefs.setString('watchList', jsonEncode(coinDetail));
-    // }
+    // Update watchlist value in SharedPreferences
+    prefs.setStringList('watchlist', currentWatchlist);
   }
 
-  Future<void> removeCoinToWatchlist(dynamic coinDetail) async {
+  // Remove coin from watchlist
+  Future<void> removeCoinFromWatchlist(dynamic coinDetail) async {
     // Create an instance of SharedPreferences
     final prefs = await SharedPreferences.getInstance();
 
-    // // Get current watchlist
-    // List<String>? currentWatchlist = prefs.getStringList('watchlist');
+    // Remove coin from local watchlist
+    setState(() {
+      currentWatchlist.removeWhere(
+          (element) => json.decode(element)['symbol'] == coinDetail['symbol']);
+    });
 
-    // // Check if coin already exists in watchlist or not
-    // if (currentWatchlist!.contains(coinDetail)) {
-    //   // If coin exist in watchlist, remove coin from watchlist
-    //   currentWatchlist.removeWhere((element) => element == 'eth');
-
-    //   // Update watchlist value in SharedPreferences
-    //   prefs.setString('watchList', jsonEncode(coinDetail));
-    // }
+    // Update watchlist value in SharedPreferences
+    prefs.setStringList('watchlist', currentWatchlist);
   }
 
+  // Check if coin exists in watchlist or not
   bool doesCoinExists(coin) {
     // If coin exists in watchlist, return true
-    if (watchList!.where((element) => element == coin).length > 0) {
+    if (currentWatchlist
+            .where((item) => json.decode(item)['symbol'] == coin)
+            .length >
+        0) {
       return true;
     }
     // Else, return false
     return false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    getWatchlistFromSharedPrefs();
   }
 
   @override
@@ -83,24 +103,56 @@ class _CoinDetailState extends State<CoinDetail> {
                 Image.network('${widget.coinDetail['image']}',
                     width: 20, height: 20),
                 SizedBox(width: 20),
-                Text("${widget.coinDetail['name']}",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: themeNotifier.isDark
-                            ? Colors.white
-                            : Colors.grey.shade700)),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(
-                    "(${widget.coinDetail['symbol'].toString().toUpperCase()})",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: themeNotifier.isDark
-                            ? Colors.grey.shade500
-                            : Colors.grey.shade600)),
+                widget.coinDetail['name'].toString().length >= 10
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("${widget.coinDetail['name']}",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: themeNotifier.isDark
+                                      ? Colors.white
+                                      : Colors.grey.shade700)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                              "(${widget.coinDetail['symbol'].toString().toUpperCase()})",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: themeNotifier.isDark
+                                      ? Colors.grey.shade500
+                                      : Colors.grey.shade600)),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          Text("${widget.coinDetail['name']}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: themeNotifier.isDark
+                                      ? Colors.white
+                                      : Colors.grey.shade700)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                              "(${widget.coinDetail['symbol'].toString().toUpperCase()})",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: themeNotifier.isDark
+                                      ? Colors.grey.shade500
+                                      : Colors.grey.shade600)),
+                        ],
+                      ),
               ],
             ),
             actions: [
@@ -117,7 +169,7 @@ class _CoinDetailState extends State<CoinDetail> {
                   // If coin exists, remove coin from watchlist
                   // Else, add coin to watchlist
                   doesCoinExists(widget.coinDetail['symbol'])
-                      ? removeCoinToWatchlist(widget.coinDetail)
+                      ? removeCoinFromWatchlist(widget.coinDetail)
                       : addCoinToWatchlist(widget.coinDetail);
                 },
               ),
@@ -345,7 +397,8 @@ class _CoinDetailState extends State<CoinDetail> {
                                         ? Colors.grey.shade500
                                         : Colors.grey.shade700,
                                     fontSize: 15)),
-                            Text('\$${widget.coinDetail['ath']}',
+                            Text(
+                                '\$${widget.coinDetail['ath'].toDouble().toStringAsFixed(2)}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: themeNotifier.isDark
@@ -376,7 +429,8 @@ class _CoinDetailState extends State<CoinDetail> {
                                         ? Colors.grey.shade500
                                         : Colors.grey.shade700,
                                     fontSize: 15)),
-                            Text('\$${widget.coinDetail['atl']}',
+                            Text(
+                                '\$${widget.coinDetail['atl'].toDouble().toStringAsFixed(2)}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: themeNotifier.isDark
