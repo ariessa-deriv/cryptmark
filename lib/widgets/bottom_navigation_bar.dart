@@ -23,6 +23,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
       'Watchlist',
       style: optionStyle,
     ),
+    Text(
+      'Search',
+      style: optionStyle,
+    ),
   ];
 
   void _onItemTapped(int index) {
@@ -33,6 +37,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
       if (index == 1) {
         Navigator.pushNamed(context, watchlistRoute,
+            arguments: 'Data from home');
+      }
+      if (index == 2) {
+        Navigator.pushNamed(context, searchRoute,
             arguments: 'Data from home');
       }
     });
@@ -57,6 +65,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 : Colors.grey.shade800,
           ),
           label: 'Watchlist',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.search,
+            color: Colors.grey.shade700,
+          ),
+          label: 'Search',
         ),
       ],
       currentIndex: _selectedIndex,

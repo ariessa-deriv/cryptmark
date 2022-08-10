@@ -3,9 +3,8 @@ import 'package:cryptmark/routing/router.dart';
 import 'package:cryptmark/states/coin_cubit.dart';
 import 'package:cryptmark/states/coin_state.dart';
 import 'dart:convert';
-
+import 'package:cryptmark/pages/search_page.dart';
 import 'package:cryptmark/theme/theme_model.dart';
-import 'package:cryptmark/widgets/application_bar.dart';
 import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
 import 'package:cryptmark/widgets/search_bar.dart';
 import 'package:cryptmark/widgets/skeleton_loader.dart';
@@ -58,6 +57,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // SearchCubit cubit = BlocProvider.of<SearchCubit>(context);
     final double width = MediaQuery.of(context).size.width;
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
