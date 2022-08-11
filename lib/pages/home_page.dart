@@ -1,16 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cryptmark/models/argument_model.dart';
 import 'package:cryptmark/models/coin_model.dart';
 import 'package:cryptmark/routing/router.dart';
 import 'package:cryptmark/states/coin_cubit.dart';
 import 'package:cryptmark/states/coin_state.dart';
 import 'dart:convert';
-
+import 'package:cryptmark/pages/search_page.dart';
 import 'package:cryptmark/theme/theme_model.dart';
-import 'package:cryptmark/widgets/application_bar.dart';
 import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
 import 'package:cryptmark/widgets/search_bar.dart';
 import 'package:cryptmark/widgets/skeleton_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -23,37 +25,60 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+// TODO: Use CoinModel
 class _HomePageState extends State<HomePage> {
   late CoinCubit cubit;
-  List<String> currentWatchlist = [];
 
-  // Get watchlist from SharedPreferences
-  Future<void> getWatchlistFromSharedPrefs() async {
+  // Get API's last fetch time from SharedPreferences
+  Future<void> getApiLastFetchTimeFromSharedPrefs() async {
+    // Create an instance of SharedPreferences
     final prefs = await SharedPreferences.getInstance();
-    List<String>? watchlist = prefs.getStringList('watchlist');
 
-    if (watchlist == null) {
-      setState(() {
-        currentWatchlist = [];
-      });
-    } else {
-      setState(() {
-        currentWatchlist = watchlist;
-      });
+    // Get value of 'ApilastFetchTime' key in SharedPreferences
+    String? ApiLastFetchTime = prefs.getString('ApiLastFetchTime');
+    print('APi last fetch: $ApiLastFetchTime');
+
+    // If API's last fetch time is not null (the API has been fetched at least once)
+    if (ApiLastFetchTime != null) {
+      // Check if current time is more than 10 seconds than lastFetchTime
+      final timeDifference =
+          DateTime.now().difference(DateTime.parse(ApiLastFetchTime)).inSeconds;
+
+      // If the time difference between current time and API's last fetch time
+      // is more than 10 seconds, fetch coins from API again
+      // and update API's last fetch time
+      if (timeDifference >= 10) {
+        cubit.fetchCoins();
+        setApiLastFetchTime();
+      }
     }
+    // Else if API's last fetch time is null (the API hasn't been fetched ever)
+    // fetch coins from API
+    // and update API's last fetch time
+    else {
+      cubit.fetchCoins();
+      setApiLastFetchTime();
+    }
+  }
+
+  // Set API's last fetch time in SharedPreferences
+  Future<void> setApiLastFetchTime() async {
+    // Create an instance of SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+
+    // Set value of 'ApilastFetchTime' key in SharedPreferences
+    prefs.setString('ApiLastFetchTime', DateTime.now().toString());
   }
 
   @override
   void initState() {
     super.initState();
 
-    // TODO: Fetch coins from API only if cubit has no value
+    // Create an instance of CoinCubit
+    cubit = BlocProvider.of<CoinCubit>(context);
 
-    // Fetch coins from API
-    cubit = BlocProvider.of<CoinCubit>(context)..fetchCoins();
-
-    // Get watchlist from SharedPreferences
-    getWatchlistFromSharedPrefs();
+    // Get API's last fetch time
+    getApiLastFetchTimeFromSharedPrefs();
   }
 
   @override
@@ -65,25 +90,21 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: themeNotifier.isDark
                 ? Colors.grey.shade800
                 : Colors.grey.shade200,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Image.asset(
-                  'assets/logo.png',
-                  fit: BoxFit.contain,
-                  height: 40,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Cryptmark",
-                    style: TextStyle(color: Colors.lightGreen),
-                  ),
-                )
-              ],
+            title: Text(
+              'Market',
+              style: TextStyle(
+                color: themeNotifier.isDark
+                    ? Colors.grey.shade200
+                    : Colors.grey.shade600,
+              ),
             ),
             automaticallyImplyLeading: false,
             actions: <Widget>[
+              IconButton(
+                  onPressed: () {
+                    // TODO: Navigate to Explore page
+                  },
+                  icon: Icon(Icons.search)),
               IconButton(
                 onPressed: () {
                   themeNotifier.isDark
@@ -102,23 +123,24 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
-              SizedBox(
-                height: 50,
-              ),
-              Text(
-                'Homepage',
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Display prices of 50 cryptocurrencies',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-              ),
-              SizedBox(
-                height: 50,
-              ),
+              // SizedBox(
+              //   height: 50,
+              // ),
+              // Text(
+              //   'Homepage',
+              //   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              // ),
+              // SizedBox(
+              //   height: 20,
+              // ),
+              // Text(
+              //   'Display prices of 50 cryptocurrencies',
+              //   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+              // ),
+              // SizedBox(
+              //   height: 50,
+              // ),
+              // TODO: Add simple chart for bitcoin
               BlocBuilder(
                   bloc: cubit,
                   builder: (context, state) {
@@ -235,7 +257,8 @@ class _HomePageState extends State<HomePage> {
                                       ), onTap: (() {
                                     Navigator.pushNamed(
                                         context, coindetailRoute,
-                                        arguments: state.coinModel[i]);
+                                        arguments:
+                                            Arguments(state.coinModel[i], '/'));
                                   })),
                                   DataCell(
                                       Container(
@@ -249,10 +272,24 @@ class _HomePageState extends State<HomePage> {
                                             const SizedBox(
                                               height: 4,
                                             ),
-                                            Image.network(
-                                                '${state.coinModel[i]['image']}',
-                                                width: 20,
-                                                height: 20),
+                                            CachedNetworkImage(
+                                              imageUrl:
+                                                  '${state.coinModel[i]['image']}',
+                                              width: 20,
+                                              height: 20,
+                                              placeholder: (context, url) =>
+                                                  CircularProgressIndicator(
+                                                      valueColor:
+                                                          AlwaysStoppedAnimation(
+                                                              Color.fromARGB(
+                                                                  255,
+                                                                  116,
+                                                                  255,
+                                                                  3))),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
                                             const SizedBox(
                                               height: 4,
                                             ),
@@ -272,7 +309,8 @@ class _HomePageState extends State<HomePage> {
                                       ), onTap: (() {
                                     Navigator.pushNamed(
                                         context, coindetailRoute,
-                                        arguments: state.coinModel[i]);
+                                        arguments:
+                                            Arguments(state.coinModel[i], '/'));
                                   })),
                                   DataCell(
                                       Container(
@@ -289,7 +327,8 @@ class _HomePageState extends State<HomePage> {
                                       ), onTap: (() {
                                     Navigator.pushNamed(
                                         context, coindetailRoute,
-                                        arguments: state.coinModel[i]);
+                                        arguments:
+                                            Arguments(state.coinModel[i], '/'));
                                   })),
                                   DataCell(
                                       Container(
@@ -327,7 +366,8 @@ class _HomePageState extends State<HomePage> {
                                       ), onTap: (() {
                                     Navigator.pushNamed(
                                         context, coindetailRoute,
-                                        arguments: state.coinModel[i]);
+                                        arguments:
+                                            Arguments(state.coinModel[i], '/'));
                                   })),
                                   DataCell(
                                       Container(
@@ -346,7 +386,8 @@ class _HomePageState extends State<HomePage> {
                                       ), onTap: (() {
                                     Navigator.pushNamed(
                                         context, coindetailRoute,
-                                        arguments: state.coinModel[i]);
+                                        arguments:
+                                            Arguments(state.coinModel[i], '/'));
                                   })),
                                 ],
                               );

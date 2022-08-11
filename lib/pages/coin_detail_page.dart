@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cryptmark/widgets/application_bar.dart';
 import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,10 @@ import '../theme/theme_model.dart';
 
 class CoinDetail extends StatefulWidget {
   final Map coinDetail;
-  const CoinDetail({Key? key, required this.coinDetail}) : super(key: key);
+  final String previousPage;
+  const CoinDetail(
+      {Key? key, required this.coinDetail, required this.previousPage})
+      : super(key: key);
 
   @override
   State<CoinDetail> createState() => _CoinDetailState();
@@ -21,14 +25,14 @@ class _CoinDetailState extends State<CoinDetail> {
 
   // Get watchlist from SharedPreferences
   Future<void> getWatchlistFromSharedPrefs() async {
+    // Create an instance of SharedPreferences
     final prefs = await SharedPreferences.getInstance();
+
+    // Get value of 'watchlist' key in SharedPreferences
     List<String>? watchlist = prefs.getStringList('watchlist');
 
-    if (watchlist == null) {
-      setState(() {
-        currentWatchlist = [];
-      });
-    } else {
+    // If watchlist is not null, assign it to currentWatchlist
+    if (watchlist != null) {
       setState(() {
         currentWatchlist = watchlist;
       });
@@ -73,7 +77,7 @@ class _CoinDetailState extends State<CoinDetail> {
         0) {
       return true;
     }
-    // Else, return false
+    // Else if coin does not exist in watchlist, return false
     return false;
   }
 
@@ -81,6 +85,7 @@ class _CoinDetailState extends State<CoinDetail> {
   void initState() {
     super.initState();
 
+    // Get watchlist from SharedPreferences
     getWatchlistFromSharedPrefs();
   }
 
@@ -100,8 +105,15 @@ class _CoinDetailState extends State<CoinDetail> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.network('${widget.coinDetail['image']}',
-                    width: 20, height: 20),
+                CachedNetworkImage(
+                  imageUrl: '${widget.coinDetail['image']}',
+                  width: 20,
+                  height: 20,
+                  placeholder: (context, url) => CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(
+                          Color.fromARGB(255, 116, 255, 3))),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
                 SizedBox(width: 20),
                 widget.coinDetail['name'].toString().length >= 10
                     ? Column(
@@ -181,7 +193,19 @@ class _CoinDetailState extends State<CoinDetail> {
                     themeNotifier.isDark ? Colors.white : Colors.grey.shade800,
               ),
               onPressed: () {
-                Navigator.pop(context);
+                // If previous page is Homepage,
+                // remove current page from Navigator stack
+                // and navigate to Homepage
+                if (widget.previousPage == '/') {
+                  Navigator.pop(context);
+                }
+                // Else if previous page is not Homepage (i.e. Watchlist Page),
+                // remove current page from Navigator stack
+                // navigate to previous page
+                // rebuild widget tree in previous page
+                else {
+                  Navigator.popAndPushNamed(context, widget.previousPage);
+                }
               },
             ),
           ),

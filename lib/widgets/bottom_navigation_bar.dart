@@ -10,6 +10,8 @@ class BottomNavBar extends StatefulWidget {
   State<BottomNavBar> createState() => _BottomNavBarState();
 }
 
+// TODO: Put colour at text and icon for selected index
+// to differentiate between selected and non selected index
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
@@ -17,6 +19,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
       'HomePage',
+      style: optionStyle,
+    ),
+    Text(
+      'Explore',
       style: optionStyle,
     ),
     Text(
@@ -28,12 +34,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
   void _onItemTapped(int index) {
     setState(() {
       if (index == 0) {
-        Navigator.pushNamed(context, homeRoute, arguments: 'Data from home');
+        Navigator.pushNamed(context, homeRoute);
       }
 
       if (index == 1) {
-        Navigator.pushNamed(context, watchlistRoute,
-            arguments: 'Data from home');
+        Navigator.pushNamed(context, searchRoute);
+      }
+
+      if (index == 2) {
+        Navigator.pushNamed(context, watchlistRoute);
       }
     });
   }
@@ -48,6 +57,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
         BottomNavigationBarItem(
           icon: Icon(Icons.show_chart, color: Colors.grey.shade500),
           label: 'Market',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.search,
+            color: widget.themeNotifier.isDark
+                ? Colors.grey.shade200
+                : Colors.grey.shade800,
+          ),
+          label: 'Explore',
         ),
         BottomNavigationBarItem(
           icon: Icon(
