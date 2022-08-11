@@ -62,7 +62,7 @@ class _WatchlistPageState extends State<WatchlistPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Image.asset(
-                  'assets/CRYPTMARK_logo.png',
+                  'assets/logo.png',
                   fit: BoxFit.contain,
                   height: 40,
                 ),
