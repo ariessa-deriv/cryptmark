@@ -2,20 +2,13 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cryptmark/models/argument_model.dart';
 import 'package:cryptmark/routing/router.dart';
-import 'package:cryptmark/states/coin_cubit.dart';
-import 'package:cryptmark/states/coin_state.dart';
-import 'package:cryptmark/widgets/application_bar.dart';
 import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
 import 'package:cryptmark/widgets/empty_watchlist.dart';
-import 'package:cryptmark/widgets/search_bar.dart';
-import 'package:cryptmark/widgets/skeleton_loader.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/theme_model.dart';
-import 'package:http/http.dart' as http;
 
 class WatchlistPage extends StatefulWidget {
   const WatchlistPage({Key? key}) : super(key: key);
@@ -57,7 +50,7 @@ class _WatchlistPageState extends State<WatchlistPage> {
                 ? Colors.grey.shade800
                 : Colors.grey.shade200,
             title: Text(
-              'Cryptmark',
+              'Watchlist',
               style: TextStyle(
                 color: themeNotifier.isDark
                     ? Colors.grey.shade200
@@ -66,6 +59,15 @@ class _WatchlistPageState extends State<WatchlistPage> {
             ),
             automaticallyImplyLeading: false,
             actions: <Widget>[
+              IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, searchRoute);
+                },
+                icon: Icon(Icons.search),
+                color: themeNotifier.isDark
+                    ? Colors.grey.shade200
+                    : Colors.grey.shade600,
+              ),
               IconButton(
                 onPressed: () {
                   themeNotifier.isDark
@@ -78,7 +80,7 @@ class _WatchlistPageState extends State<WatchlistPage> {
                 color: themeNotifier.isDark
                     ? Colors.grey.shade200
                     : Colors.grey.shade600,
-              ),
+              )
             ],
           ),
           bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),

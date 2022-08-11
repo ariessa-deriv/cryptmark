@@ -101,10 +101,14 @@ class _HomePageState extends State<HomePage> {
             automaticallyImplyLeading: false,
             actions: <Widget>[
               IconButton(
-                  onPressed: () {
-                    // TODO: Navigate to Explore page
-                  },
-                  icon: Icon(Icons.search)),
+                onPressed: () {
+                  Navigator.pushNamed(context, searchRoute);
+                },
+                icon: Icon(Icons.search),
+                color: themeNotifier.isDark
+                    ? Colors.grey.shade200
+                    : Colors.grey.shade600,
+              ),
               IconButton(
                 onPressed: () {
                   themeNotifier.isDark
