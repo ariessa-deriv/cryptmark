@@ -94,9 +94,6 @@ class _CoinDetailState extends State<CoinDetail> {
     return Consumer(
       builder: (context, ThemeModel themeNotifier, child) {
         return Scaffold(
-          backgroundColor: themeNotifier.isDark
-              ? Colors.grey.shade900
-              : Color.fromARGB(245, 255, 255, 255),
           appBar: AppBar(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
