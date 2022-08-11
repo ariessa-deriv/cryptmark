@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           ),
-          bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
+          // bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
               // SizedBox(
