@@ -8,6 +8,7 @@ import 'package:cryptmark/pages/watchlist_page.dart';
 import 'package:cryptmark/states/coin_cubit.dart';
 import 'package:cryptmark/theme/custom_theme.dart';
 import 'package:cryptmark/theme/theme_model.dart';
+import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:cryptmark/pages/home_page.dart';
 import 'package:flutter/services.dart';
@@ -35,32 +36,36 @@ class MyApp extends StatelessWidget {
         create: (_) => ThemeModel(),
         child: Consumer(builder: (context, ThemeModel themeNotifier, child) {
           return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              onGenerateRoute: (settings) => generateRoute(settings),
-              initialRoute: homeRoute,
-              title: 'Cryptmark',
-              theme: themeNotifier.isDark
-                  ? ThemeData.dark()
-                  : CustomTheme.lightTheme,
-              home: AnimatedSplashScreen(
-                duration: 3000,
-                splash: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Image.asset("assets/images/logo.png",
-                          width: 200, height: 200),
-                    ),
-                    Text(
-                      "Cryptmark",
-                      style: TextStyle(fontSize: 20, color: Colors.lightGreen),
-                    )
-                  ],
-                ),
-                nextScreen: HomePage(),
-                splashTransition: SplashTransition.fadeTransition,
-                backgroundColor: Colors.white,
-              ));
+            debugShowCheckedModeBanner: false,
+            onGenerateRoute: (settings) => generateRoute(settings),
+            initialRoute: homeRoute,
+            title: 'Cryptmark',
+            theme: themeNotifier.isDark
+                ? ThemeData.dark()
+                : CustomTheme.lightTheme,
+            home: AnimatedSplashScreen(
+              duration: 3000,
+              splash: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Image.asset("assets/images/logo.png",
+                        width: 200, height: 200),
+                  ),
+                  Text(
+                    "Cryptmark",
+                    style: TextStyle(fontSize: 20, color: Colors.lightGreen),
+                  )
+                ],
+              ),
+              splashIconSize: 200,
+              nextScreen: BottomNavBar(
+                themeNotifier: themeNotifier,
+              ),
+              splashTransition: SplashTransition.fadeTransition,
+              backgroundColor: Colors.white,
+            ),
+          );
         }));
   }
 }
