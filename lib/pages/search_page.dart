@@ -21,9 +21,6 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
-// TODO: Add search history, save it to shared preferences
-// TODO: If search history is empty, add suggested coins section
-
 class _SearchPageState extends State<SearchPage> {
   List<dynamic> search = [];
   late final String coinName;
@@ -31,43 +28,12 @@ class _SearchPageState extends State<SearchPage> {
   bool _isCoinNameEmpty = true;
   final TextEditingController textController = TextEditingController();
   final String hintText = 'Search for a coin...';
-
-  List<String> coinsSearchHistory = List<String>.generate(
-      5,
-      (index) =>
-          '{"name": "Ethereum", "symbol": "ETH", "image": "https://assets.coingecko.com/coins/images/1/small/bitcoin.png?1547033579", "market_cap_rank": 2}');
-
-  // Get search history from SharedPreferences
-  Future<void> getSearchHistoryFromSharedPrefs() async {
-    // Create an instance of SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
-
-    // Get value of 'searchHistory' key in SharedPreferences
-    List<String>? searchHistory = prefs.getStringList('searchHistory');
-
-    // If search history is not null (user has searched for at least a coin)
-    if (searchHistory != null) {
-      setState(() {
-        coinsSearchHistory = searchHistory;
-      });
-    }
-  }
-
-  // Set search history in SharedPreferences
-  Future<void> setSearchHistory() async {
-    // Create an instance of SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
-
-    // Set value of 'searchHistory' key in SharedPreferences
-    prefs.setStringList('searchHistory', ['a', 'b', 'c']);
-  }
+  List<String> coinsList = [];
 
   @override
   void initState() {
     super.initState();
     cubit = BlocProvider.of<CoinCubit>(context)..fetchCoins();
-    fetchSearch(coinID: widget.searchCoin);
-    // getSearchHistoryFromSharedPrefs();
     textController.addListener(() {
       setState(
         () => _isCoinNameEmpty = textController.text.isEmpty,
@@ -75,59 +41,9 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  Future<void> fetchSearch({String? coinID}) async {
-    final Uri url = Uri(
-      scheme: 'https',
-      host: 'api.coingecko.com',
-      path: 'api/v3/coins/markets',
-      queryParameters: {
-        'ids': coinID,
-        'vs_currency': 'usd',
-        'order': 'market_cap_desc',
-        'per_page': '50',
-        'page': '1',
-        'price_change_percentage': '1h,24h,7d',
-      },
-    );
-    http.Response response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      var searchResponse = jsonDecode(response.body);
-      print(searchResponse.runtimeType);
-      setState(() {
-        search = searchResponse;
-      });
-    } else {
-      throw Exception('Failed to load search information.');
-    }
-  }
-
   searchCoin(String query) {
     cubit.fetchCoins();
   }
-
-  // void filterSearchResults(String query) {
-  //   List<String> dummySearchList = List<String>();
-  //   dummySearchList.addAll(duplicateItems);
-  //   if (query.isNotEmpty) {
-  //     List<String> dummyListData = List<String>();
-  //     dummySearchList.forEach((item) {
-  //       if (item.contains(query)) {
-  //         dummyListData.add(item);
-  //       }
-  //     });
-  //     setState(() {
-  //       items.clear();
-  //       items.addAll(dummyListData);
-  //     });
-  //     return;
-  //   } else {
-  //     setState(() {
-  //       items.clear();
-  //       items.addAll(duplicateItems);
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -183,6 +99,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
               ),
+
               // Check if coins search history has at least one item
               // If true, display Search History and Suggested Coins
               // Else, display Suggested Coins only
@@ -286,7 +203,16 @@ class _SearchPageState extends State<SearchPage> {
                       padding: EdgeInsets.symmetric(vertical: 40),
                       child: EmptyExplore(),
                     )
-                  : Text('not empty')
+                  : BlocBuilder(
+                      builder: (context, state) {
+                        if (state is CoinLoaded) {
+                          return Text('not empty');
+                        }
+                        return Text(state is CoinError
+                            ? state.errorMessage
+                            : 'Unknown error');
+                      },
+                    )
             ],
           ));
     });

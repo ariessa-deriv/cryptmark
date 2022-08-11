@@ -22,6 +22,22 @@ class HomePage extends StatefulWidget {
 // TODO: Use CoinModel
 class _HomePageState extends State<HomePage> {
   late CoinCubit cubit;
+  bool _isCoinNameEmpty = true;
+  final TextEditingController textController = TextEditingController();
+  final String hintText = 'Search for a coin...';
+  late List<dynamic> coinsList;
+  List<dynamic> filteredList = [];
+  // String query = "";
+
+  // Filter coins list based on search query
+  searchCoin(List<dynamic> coinsList, String query) {
+    // Return list of people matching the condition
+    final foundCoin =
+        coinsList.where((element) => element['name'].contains(query));
+
+    print('foundCoin: $foundCoin');
+    filteredList = foundCoin as List<dynamic>;
+  }
 
   // Get API's last fetch time from SharedPreferences
   Future<void> getApiLastFetchTimeFromSharedPrefs() async {
@@ -121,6 +137,54 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
+              // Search bar
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(boxShadow: [
+                  BoxShadow(
+                      offset: const Offset(12, 26),
+                      blurRadius: 50,
+                      spreadRadius: 0,
+                      color: Colors.grey.withOpacity(.1)),
+                ]),
+                child: TextField(
+                  controller: textController,
+                  onChanged: ((value) {
+                    // searchCoin(coinsList, value);
+
+                    var test = coinsList
+                        .where((element) => element['name'].contains(value))
+                        .toString();
+                    print(
+                        'result: ${coinsList.where((element) => element['name'].contains(value))}');
+                  }),
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: hintText,
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 20.0),
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 2.0),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                  ),
+                ),
+              ),
+
               BlocBuilder(
                   bloc: cubit,
                   builder: (context, state) {
@@ -129,6 +193,8 @@ class _HomePageState extends State<HomePage> {
                     }
 
                     if (state is CoinLoaded) {
+                      coinsList = state.coinModel;
+
                       return Expanded(
                           child: SingleChildScrollView(
                         child: DataTable(
