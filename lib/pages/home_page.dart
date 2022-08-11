@@ -1,21 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cryptmark/models/argument_model.dart';
-import 'package:cryptmark/models/coin_model.dart';
 import 'package:cryptmark/routing/router.dart';
 import 'package:cryptmark/states/coin_cubit.dart';
 import 'package:cryptmark/states/coin_state.dart';
-import 'dart:convert';
-import 'package:cryptmark/pages/search_page.dart';
 import 'package:cryptmark/theme/theme_model.dart';
 import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
-import 'package:cryptmark/widgets/search_bar.dart';
 import 'package:cryptmark/widgets/skeleton_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -127,24 +121,6 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
-              // SizedBox(
-              //   height: 50,
-              // ),
-              // Text(
-              //   'Homepage',
-              //   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              // ),
-              // SizedBox(
-              //   height: 20,
-              // ),
-              // Text(
-              //   'Display prices of 50 cryptocurrencies',
-              //   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-              // ),
-              // SizedBox(
-              //   height: 50,
-              // ),
-              // TODO: Add simple chart for bitcoin
               BlocBuilder(
                   bloc: cubit,
                   builder: (context, state) {
