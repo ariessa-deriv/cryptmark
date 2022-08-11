@@ -3,20 +3,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cryptmark/models/argument_model.dart';
 import 'package:cryptmark/pages/search_page.dart';
 import 'package:cryptmark/routing/router.dart';
-import 'package:cryptmark/states/coin_cubit.dart';
-import 'package:cryptmark/states/coin_state.dart';
-import 'package:cryptmark/widgets/application_bar.dart';
 import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
 import 'package:cryptmark/widgets/empty_watchlist.dart';
-import 'package:cryptmark/widgets/search_bar.dart';
-import 'package:cryptmark/widgets/skeleton_loader.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/theme_model.dart';
-import 'package:http/http.dart' as http;
 
 class WatchlistPage extends StatefulWidget {
   const WatchlistPage({Key? key}) : super(key: key);
@@ -54,24 +47,46 @@ class _WatchlistPageState extends State<WatchlistPage> {
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
           appBar: AppBar(
-            // backgroundColor: themeNotifier.isDark
-            //     ? Colors.grey.shade800
-            //     : Colors.grey.shade200,
-            title: Text(
-              'Watchlist',
-              style: TextStyle(
-                // color: themeNotifier.isDark
-                //     ? Colors.grey.shade200
-                //     : Colors.grey.shade600,
-              ),
+            backgroundColor: themeNotifier.isDark
+                ? Colors.grey.shade800
+                : Colors.grey.shade200,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset(
+                  'assets/logo.png',
+                  fit: BoxFit.contain,
+                  height: 40,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Cryptmark",
+                    style: TextStyle(color: Colors.lightGreen),
+                  ),
+                )
+              ],
             ),
             automaticallyImplyLeading: false,
             actions: <Widget>[
               IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, searchRoute);
+                },
+                icon: Icon(Icons.search),
+                color: themeNotifier.isDark
+                    ? Colors.grey.shade200
+                    : Colors.grey.shade600,
+              ),
+              IconButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(searchCoin: '')));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchPage(searchCoin: '')));
                   },
-                  icon: Icon(Icons.search,
+                  icon: Icon(
+                    Icons.search,
                     // color: themeNotifier.isDark
                     //     ? Colors.grey.shade200
                     //     : Colors.grey.shade600,
@@ -85,32 +100,15 @@ class _WatchlistPageState extends State<WatchlistPage> {
                 icon: Icon(themeNotifier.isDark
                     ? Icons.nightlight_rounded
                     : Icons.wb_sunny),
-                // color: themeNotifier.isDark
-                //     ? Colors.grey.shade200
-                //     : Colors.grey.shade600,
-              ),
+                color: themeNotifier.isDark
+                    ? Colors.grey.shade200
+                    : Colors.grey.shade600,
+              )
             ],
           ),
           // bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
-              // SizedBox(
-              //   height: 50,
-              // ),
-              // Text(
-              //   'Watchlist',
-              //   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              // ),
-              // SizedBox(
-              //   height: 20,
-              // ),
-              // Text(
-              //   'Display prices of your favourite coins',
-              //   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-              // ),
-              // SizedBox(
-              //   height: 50,
-              // ),
               Expanded(
                   child: currentWatchlist.length < 1
                       ? EmptyWatchlist()

@@ -9,7 +9,6 @@ class EmptyWatchlist extends StatefulWidget {
   @override
   State<EmptyWatchlist> createState() => _EmptyWatchlistState();
 }
-// TODO: Use image without background
 
 class _EmptyWatchlistState extends State<EmptyWatchlist> {
   @override
