@@ -10,6 +10,8 @@ class BottomNavBar extends StatefulWidget {
   State<BottomNavBar> createState() => _BottomNavBarState();
 }
 
+// TODO: Put colour at text and icon for selected index
+// to differentiate between selected and non selected index
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
@@ -20,11 +22,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
       style: optionStyle,
     ),
     Text(
-      'Watchlist',
+      'Explore',
       style: optionStyle,
     ),
     Text(
-      'Search',
+      'Watchlist',
       style: optionStyle,
     ),
   ];
@@ -32,16 +34,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
   void _onItemTapped(int index) {
     setState(() {
       if (index == 0) {
-        Navigator.pushNamed(context, homeRoute, arguments: 'Data from home');
+        Navigator.pushNamed(context, homeRoute);
       }
 
       if (index == 1) {
-        Navigator.pushNamed(context, watchlistRoute,
-            arguments: 'Data from home');
+        Navigator.pushNamed(context, searchRoute);
       }
+
       if (index == 2) {
-        Navigator.pushNamed(context, searchRoute,
-            arguments: 'Data from home');
+        Navigator.pushNamed(context, watchlistRoute);
       }
     });
   }
@@ -59,19 +60,21 @@ class _BottomNavBarState extends State<BottomNavBar> {
         ),
         BottomNavigationBarItem(
           icon: Icon(
+            Icons.search,
+            color: widget.themeNotifier.isDark
+                ? Colors.grey.shade200
+                : Colors.grey.shade800,
+          ),
+          label: 'Explore',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
             Icons.star_border_outlined,
             color: widget.themeNotifier.isDark
                 ? Colors.grey.shade200
                 : Colors.grey.shade800,
           ),
           label: 'Watchlist',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.search,
-            color: Colors.grey.shade700,
-          ),
-          label: 'Search',
         ),
       ],
       currentIndex: _selectedIndex,

@@ -5,6 +5,7 @@ import 'package:cryptmark/services/coin_service.dart';
 import 'package:cryptmark/pages/coin_detail_page.dart';
 import 'package:cryptmark/pages/watchlist_page.dart';
 import 'package:cryptmark/states/coin_cubit.dart';
+import 'package:cryptmark/theme/custom_theme.dart';
 import 'package:cryptmark/theme/theme_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cryptmark/pages/home_page.dart';
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
               title: 'Cryptmark',
               theme: themeNotifier.isDark
                   ? ThemeData.dark()
-                  : ThemeData(primaryColor: Colors.white),
+                  : CustomTheme.lightTheme,
               home: HomePage());
         }));
   }
