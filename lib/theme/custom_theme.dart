@@ -8,19 +8,19 @@ class CustomTheme {
       //2
       appBarTheme: AppBarTheme(
           shadowColor: Colors.white,
-          backgroundColor: Color(0xFFedf0f2),
+          backgroundColor: Color(0xFFd1d9ff),
           iconTheme: IconThemeData(color: Color(0xff000000)),
           titleTextStyle: TextStyle(
               fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold)),
 
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Color(0xFFedf0f2),
+          backgroundColor: Color(0xFFd1d9ff),
           selectedItemColor: Colors.black,
           selectedIconTheme: IconThemeData(color: Colors.black),
-          unselectedItemColor: Colors.grey,
-          unselectedIconTheme: IconThemeData(color: Colors.grey)),
+          unselectedItemColor: Color(0xff757de8),
+          unselectedIconTheme: IconThemeData(color: Color(0xff757de8))),
 
-      scaffoldBackgroundColor: Color(0xFFeeeeeee),
+      scaffoldBackgroundColor: Color(0xFFe8eaf6),
       fontFamily: 'Montserrat', //3
     );
   }

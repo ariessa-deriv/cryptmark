@@ -47,9 +47,6 @@ class _WatchlistPageState extends State<WatchlistPage> {
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
           appBar: AppBar(
-            backgroundColor: themeNotifier.isDark
-                ? Colors.grey.shade800
-                : Colors.grey.shade200,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -78,9 +75,6 @@ class _WatchlistPageState extends State<WatchlistPage> {
                   Navigator.pushNamed(context, searchRoute);
                 },
                 icon: Icon(Icons.search),
-                // color: themeNotifier.isDark
-                //     ? Colors.grey.shade200
-                //     : Colors.grey.shade600,
               ),
               IconButton(
                 onPressed: () {
