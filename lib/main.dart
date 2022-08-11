@@ -43,20 +43,14 @@ class MyApp extends StatelessWidget {
                   ? ThemeData.dark()
                   : CustomTheme.lightTheme,
               home: AnimatedSplashScreen(
-                duration: 3000,
-                splash: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/logo.png",
-                      scale: 4,
-                    ),
-                    Text(
-                      "Cryptmark",
-                      style: TextStyle(fontSize: 20, color: Colors.lightGreen),
-                    )
-                  ],
+                duration: 4000,
+                splash: Container(
+                  alignment: Alignment.center,
+                  child: Image.asset(
+                    "assets/images/logo_wname.png",
+                  ),
                 ),
+                splashIconSize: 200,
                 nextScreen: HomePage(),
                 splashTransition: SplashTransition.fadeTransition,
                 backgroundColor: Colors.white,
