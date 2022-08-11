@@ -1,5 +1,4 @@
 import 'package:cryptmark/pages/home_page.dart';
-import 'package:cryptmark/pages/search_page.dart';
 import 'package:cryptmark/pages/watchlist_page.dart';
 import 'package:cryptmark/routing/router.dart';
 import 'package:cryptmark/theme/theme_model.dart';
@@ -20,9 +19,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
   List<Widget> _tabs = [
     HomePage(),
-    SearchPage(
-      searchCoin: '',
-    ),
     WatchlistPage(),
   ];
   static const TextStyle optionStyle =
