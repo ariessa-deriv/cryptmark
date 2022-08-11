@@ -98,9 +98,9 @@ class _CoinDetailState extends State<CoinDetail> {
               ? Colors.grey.shade900
               : Color.fromARGB(245, 255, 255, 255),
           appBar: AppBar(
-            backgroundColor: themeNotifier.isDark
-                ? Colors.grey.shade800
-                : Colors.grey.shade200,
+            // backgroundColor: themeNotifier.isDark
+            //     ? Colors.grey.shade800
+            //     : Colors.grey.shade200,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,

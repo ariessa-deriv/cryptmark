@@ -86,7 +86,7 @@ class _SearchPageState extends State<SearchPage> {
           //             : Icons.wb_sunny))
           //   ],
           // ),
-          bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
+          // bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

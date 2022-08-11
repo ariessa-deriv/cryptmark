@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
 // <color name="primaryColor">#fafafa</color>
@@ -16,25 +17,48 @@ import 'package:flutter/material.dart';
 
 // TODO: Add remaining theme for both dark mode and light mode
 
-const PrimaryColor = const Color(0xFFfafafa);
-const PrimaryColorLight = const Color(0xFFffffff);
-const PrimaryColorDark = const Color(0xFFc7c7c7);
-
-const SecondaryColor = const Color(0xFFf5f5f5);
-const SecondaryColorLight = const Color(0xFFffffff);
-const SecondaryColorDark = const Color(0xFFc2c2c2);
-
-const Background = const Color(0xFFfffdf7);
-const TextColor = const Color(0xFFffffff);
+// const PrimaryColor = const Color(0xFFedf0f2);
+// const PrimaryColorLight = const Color(0xFFd1d9ff);
+// const PrimaryColorDark = const Color(0xFFf79a8);
+//
+// const SecondaryColor = const Color(0xFF4db6ac);
+// const SecondaryColorLight = const Color(0xFF82e9de);
+// const SecondaryColorDark = const Color(0xFF00867d);
+//
+// const TextColor = ;
 
 class CustomTheme {
   static ThemeData get lightTheme {
     //1
     return ThemeData(
       //2
-      primaryColor: PrimaryColor,
-      scaffoldBackgroundColor: PrimaryColorLight,
+      appBarTheme: AppBarTheme(
+        backgroundColor: Color(0xFFedf0f2),
+        iconTheme: IconThemeData(
+            color: Color(0xff000000)
+        ),
+          titleTextStyle: TextStyle(
+              fontSize: 18,
+          color: Colors.black
+      )
+      ),
+
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: Color(0xFFedf0f2),
+
+        selectedItemColor: Colors.black,
+        selectedIconTheme: IconThemeData(
+            color: Colors.black
+        ),
+        unselectedItemColor: Colors.grey,
+        unselectedIconTheme: IconThemeData(
+          color: Colors.grey
+        )
+      ),
+
+      scaffoldBackgroundColor: Color(0xFFeeeeeee),
       fontFamily: 'Montserrat', //3
     );
   }
+
 }

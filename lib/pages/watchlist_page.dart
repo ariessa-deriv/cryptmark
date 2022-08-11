@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cryptmark/models/argument_model.dart';
+import 'package:cryptmark/pages/search_page.dart';
 import 'package:cryptmark/routing/router.dart';
 import 'package:cryptmark/states/coin_cubit.dart';
 import 'package:cryptmark/states/coin_state.dart';
@@ -53,19 +54,28 @@ class _WatchlistPageState extends State<WatchlistPage> {
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
           appBar: AppBar(
-            backgroundColor: themeNotifier.isDark
-                ? Colors.grey.shade800
-                : Colors.grey.shade200,
+            // backgroundColor: themeNotifier.isDark
+            //     ? Colors.grey.shade800
+            //     : Colors.grey.shade200,
             title: Text(
-              'Cryptmark',
+              'Watchlist',
               style: TextStyle(
-                color: themeNotifier.isDark
-                    ? Colors.grey.shade200
-                    : Colors.grey.shade600,
+                // color: themeNotifier.isDark
+                //     ? Colors.grey.shade200
+                //     : Colors.grey.shade600,
               ),
             ),
             automaticallyImplyLeading: false,
             actions: <Widget>[
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(searchCoin: '')));
+                  },
+                  icon: Icon(Icons.search,
+                    // color: themeNotifier.isDark
+                    //     ? Colors.grey.shade200
+                    //     : Colors.grey.shade600,
+                  )),
               IconButton(
                 onPressed: () {
                   themeNotifier.isDark
@@ -75,13 +85,13 @@ class _WatchlistPageState extends State<WatchlistPage> {
                 icon: Icon(themeNotifier.isDark
                     ? Icons.nightlight_rounded
                     : Icons.wb_sunny),
-                color: themeNotifier.isDark
-                    ? Colors.grey.shade200
-                    : Colors.grey.shade600,
+                // color: themeNotifier.isDark
+                //     ? Colors.grey.shade200
+                //     : Colors.grey.shade600,
               ),
             ],
           ),
-          bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
+          // bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
               // SizedBox(

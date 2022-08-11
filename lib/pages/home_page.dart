@@ -29,6 +29,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late CoinCubit cubit;
 
+
   // Get API's last fetch time from SharedPreferences
   Future<void> getApiLastFetchTimeFromSharedPrefs() async {
     // Create an instance of SharedPreferences
@@ -87,24 +88,28 @@ class _HomePageState extends State<HomePage> {
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
           appBar: AppBar(
-            backgroundColor: themeNotifier.isDark
-                ? Colors.grey.shade800
-                : Colors.grey.shade200,
+            // backgroundColor: themeNotifier.isDark
+            //     ? Colors.grey.shade800
+            //     : Colors.grey.shade200,
             title: Text(
               'Market',
               style: TextStyle(
-                color: themeNotifier.isDark
-                    ? Colors.grey.shade200
-                    : Colors.grey.shade600,
+                // color: themeNotifier.isDark
+                //     ? Colors.grey.shade200
+                //     : Colors.grey.shade600,
               ),
             ),
             automaticallyImplyLeading: false,
             actions: <Widget>[
               IconButton(
                   onPressed: () {
-                    // TODO: Navigate to Explore page
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(searchCoin: '')));
                   },
-                  icon: Icon(Icons.search)),
+                  icon: Icon(Icons.search,
+                    // color: themeNotifier.isDark
+                    //     ? Colors.grey.shade200
+                    //     : Colors.grey.shade600,
+                  )),
               IconButton(
                 onPressed: () {
                   themeNotifier.isDark
@@ -114,13 +119,13 @@ class _HomePageState extends State<HomePage> {
                 icon: Icon(themeNotifier.isDark
                     ? Icons.nightlight_rounded
                     : Icons.wb_sunny),
-                color: themeNotifier.isDark
-                    ? Colors.grey.shade200
-                    : Colors.grey.shade600,
+                // color: themeNotifier.isDark
+                //     ? Colors.grey.shade200
+                //     : Colors.grey.shade600,
               )
             ],
           ),
-          bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
+          // bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
               // SizedBox(
@@ -147,7 +152,6 @@ class _HomePageState extends State<HomePage> {
                     if (state is CoinLoading) {
                       return SkeletonLoader();
                     }
-
                     if (state is CoinLoaded) {
                       return Expanded(
                           child: SingleChildScrollView(
@@ -164,9 +168,9 @@ class _HomePageState extends State<HomePage> {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: themeNotifier.isDark
-                                            ? Colors.white
-                                            : Colors.grey.shade700,
+                                        // color: themeNotifier.isDark
+                                        //     ? Colors.white
+                                        //     : Colors.grey.shade700,
                                         fontSize: 11),
                                   ),
                                 ),
@@ -179,9 +183,9 @@ class _HomePageState extends State<HomePage> {
                                     'Coin'.toUpperCase(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: themeNotifier.isDark
-                                            ? Colors.white
-                                            : Colors.grey.shade700,
+                                        // color: themeNotifier.isDark
+                                        //     ? Colors.white
+                                        //     : Colors.grey.shade700,
                                         fontSize: 11),
                                   ),
                                 ),
@@ -194,9 +198,9 @@ class _HomePageState extends State<HomePage> {
                                     'Price'.toUpperCase(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: themeNotifier.isDark
-                                            ? Colors.white
-                                            : Colors.grey.shade700,
+                                        // color: themeNotifier.isDark
+                                        //     ? Colors.white
+                                        //     : Colors.grey.shade700,
                                         fontSize: 11),
                                   ),
                                 ),
@@ -209,9 +213,9 @@ class _HomePageState extends State<HomePage> {
                                     '24H'.toUpperCase(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: themeNotifier.isDark
-                                            ? Colors.white
-                                            : Colors.grey.shade700,
+                                        // color: themeNotifier.isDark
+                                        //     ? Colors.white
+                                        //     : Colors.grey.shade700,
                                         fontSize: 11),
                                   ),
                                 ),
@@ -228,9 +232,9 @@ class _HomePageState extends State<HomePage> {
                                         'Market Cap'.toUpperCase(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: themeNotifier.isDark
-                                                ? Colors.white
-                                                : Colors.grey.shade700,
+                                            // color: themeNotifier.isDark
+                                            //     ? Colors.white
+                                            //     : Colors.grey.shade700,
                                             fontSize: 11),
                                       )
                                     ],

@@ -18,7 +18,7 @@ class _EmptyWatchlistState extends State<EmptyWatchlist> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset('assets/images/empty_watchlist-removebg.png'),
+        Image.asset('assets/images/empty_watchlist.png'),
         Text(
           'There\'s nothing here.',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),

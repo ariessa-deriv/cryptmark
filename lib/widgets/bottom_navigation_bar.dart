@@ -33,6 +33,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   void _onItemTapped(int index) {
     setState(() {
+      _selectedIndex = index;
       if (index == 0) {
         Navigator.pushNamed(context, homeRoute);
       }
@@ -50,30 +51,21 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      backgroundColor: widget.themeNotifier.isDark
-          ? Colors.grey.shade800
-          : Colors.grey.shade200,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.show_chart, color: Colors.grey.shade500),
+          icon: Icon(Icons.show_chart),
+          activeIcon:Icon(Icons.show_chart_outlined),
           label: 'Market',
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.search,
-            color: widget.themeNotifier.isDark
-                ? Colors.grey.shade200
-                : Colors.grey.shade800,
-          ),
+          icon: Icon(Icons.search,),
+          activeIcon: Icon(Icons.search_outlined),
           label: 'Explore',
         ),
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.star_border_outlined,
-            color: widget.themeNotifier.isDark
-                ? Colors.grey.shade200
-                : Colors.grey.shade800,
-          ),
+            Icons.star_border_outlined),
+          activeIcon: Icon(Icons.star_outlined),
           label: 'Watchlist',
         ),
       ],
