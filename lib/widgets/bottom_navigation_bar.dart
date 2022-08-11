@@ -1,3 +1,4 @@
+import 'package:cryptmark/pages/explore_page.dart';
 import 'package:cryptmark/pages/home_page.dart';
 import 'package:cryptmark/pages/watchlist_page.dart';
 import 'package:cryptmark/routing/router.dart';
@@ -19,6 +20,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
   List<Widget> _tabs = [
     HomePage(),
+    SearchPage(searchCoin: ""),
     WatchlistPage(),
   ];
   static const TextStyle optionStyle =
@@ -83,9 +85,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: widget.themeNotifier.isDark
-              ? Colors.grey.shade800
-              : Colors.grey.shade200,
+          // backgroundColor: widget.themeNotifier.isDark
+          //     ? Colors.grey.shade800
+          //     : Colors.grey.shade200,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.show_chart, color: Colors.grey.shade500),
@@ -94,18 +96,18 @@ class _BottomNavBarState extends State<BottomNavBar> {
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.search,
-                color: widget.themeNotifier.isDark
-                    ? Colors.grey.shade200
-                    : Colors.grey.shade800,
+                // color: widget.themeNotifier.isDark
+                //     ? Colors.grey.shade200
+                //     : Colors.grey.shade800,
               ),
               label: 'Explore',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.star_border_outlined,
-                color: widget.themeNotifier.isDark
-                    ? Colors.grey.shade200
-                    : Colors.grey.shade800,
+                // color: widget.themeNotifier.isDark
+                //     ? Colors.grey.shade200
+                //     : Colors.grey.shade800,
               ),
               label: 'Watchlist',
             ),

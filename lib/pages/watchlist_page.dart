@@ -52,16 +52,20 @@ class _WatchlistPageState extends State<WatchlistPage> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset(
-                  'assets/logo.png',
-                  fit: BoxFit.contain,
-                  height: 40,
-                ),
+                // Image.asset(
+                //   'assets/logo.png',
+                //   fit: BoxFit.contain,
+                //   height: 40,
+                // ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Cryptmark",
-                    style: TextStyle(color: Colors.lightGreen),
+                    "Watchlist",
+                    style: TextStyle(
+                      color: themeNotifier.isDark
+                          ? Colors.grey.shade200
+                          : Colors.grey.shade600,
+                    ),
                   ),
                 )
               ],
@@ -95,264 +99,256 @@ class _WatchlistPageState extends State<WatchlistPage> {
           // bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
-              Expanded(
-                  child: currentWatchlist.length < 1
-                      ? EmptyWatchlist()
-                      : SingleChildScrollView(
-                          child: DataTable(
-                              dataRowHeight: 60,
-                              columnSpacing: 0,
-                              horizontalMargin: 0,
-                              columns: <DataColumn>[
-                                DataColumn(
-                                  label: Container(
-                                    width: width * .1,
+              AnimatedCrossFade(
+                  duration: Duration(seconds: 1),
+                  crossFadeState: currentWatchlist.length < 1
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                  firstChild: EmptyWatchlist(),
+                  secondChild: SingleChildScrollView(
+                    child: DataTable(
+                        dataRowHeight: 60,
+                        columnSpacing: 0,
+                        horizontalMargin: 0,
+                        columns: <DataColumn>[
+                          DataColumn(
+                            label: Container(
+                              width: width * .1,
+                              child: Text(
+                                '#',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade700,
+                                    fontSize: 11),
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Container(
+                              width: width * .1,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Coin'.toUpperCase(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade700,
+                                    fontSize: 11),
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Container(
+                              width: width * .2,
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                'Price'.toUpperCase(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade700,
+                                    fontSize: 11),
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Container(
+                              width: width * .2,
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                '24H'.toUpperCase(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade700,
+                                    fontSize: 11),
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Container(
+                              width: width * .4,
+                              alignment: Alignment.centerRight,
+                              padding: EdgeInsets.only(right: 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    'Market Cap'.toUpperCase(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
+                                        fontSize: 11),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                        rows: List<DataRow>.generate(currentWatchlist.length,
+                            (i) {
+                          return DataRow(
+                            cells: <DataCell>[
+                              DataCell(
+                                  Container(
+                                    alignment: Alignment.center,
                                     child: Text(
-                                      '#',
-                                      textAlign: TextAlign.center,
+                                      '${i + 1}',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: themeNotifier.isDark
                                               ? Colors.white
-                                              : Colors.grey.shade700,
+                                              : Colors.grey.shade600,
                                           fontSize: 11),
                                     ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Container(
-                                    width: width * .1,
+                                  ), onTap: (() {
+                                Navigator.pushNamed(context, coindetailRoute,
+                                    arguments: Arguments(
+                                        json.decode(currentWatchlist[i]),
+                                        'watchlist'));
+                              })),
+                              DataCell(
+                                  Container(
                                     alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Coin'.toUpperCase(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: themeNotifier.isDark
-                                              ? Colors.white
-                                              : Colors.grey.shade700,
-                                          fontSize: 11),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        CachedNetworkImage(
+                                          imageUrl:
+                                              '${json.decode(currentWatchlist[i])['image']}',
+                                          width: 20,
+                                          height: 20,
+                                          placeholder: (context, url) =>
+                                              CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation(
+                                                          Color.fromARGB(255,
+                                                              116, 255, 3))),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error),
+                                        ),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        Text(
+                                          '${json.decode(currentWatchlist[i])['symbol']}'
+                                              .toUpperCase(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: themeNotifier.isDark
+                                                  ? Colors.white
+                                                  : Colors.grey.shade900,
+                                              fontSize: 12),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Container(
-                                    width: width * .2,
+                                  ), onTap: (() {
+                                Navigator.pushNamed(context, coindetailRoute,
+                                    arguments: Arguments(
+                                        json.decode(currentWatchlist[i]),
+                                        'watchlist'));
+                              })),
+                              DataCell(
+                                  Container(
                                     alignment: Alignment.centerRight,
                                     child: Text(
-                                      'Price'.toUpperCase(),
+                                      '\$${NumberFormat("#,##0.00", "en_US").format(json.decode(currentWatchlist[i])['current_price'].toDouble())}',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           color: themeNotifier.isDark
                                               ? Colors.white
-                                              : Colors.grey.shade700,
-                                          fontSize: 11),
+                                              : Colors.grey.shade900,
+                                          fontSize: 13),
                                     ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Container(
-                                    width: width * .2,
+                                  ), onTap: (() {
+                                Navigator.pushNamed(context, coindetailRoute,
+                                    arguments: Arguments(
+                                        json.decode(currentWatchlist[i]),
+                                        'watchlist'));
+                              })),
+                              DataCell(
+                                  Container(
                                     alignment: Alignment.centerRight,
-                                    child: Text(
-                                      '24H'.toUpperCase(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: themeNotifier.isDark
-                                              ? Colors.white
-                                              : Colors.grey.shade700,
-                                          fontSize: 11),
-                                    ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Container(
-                                    width: width * .4,
-                                    alignment: Alignment.centerRight,
-                                    padding: EdgeInsets.only(right: 20),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
+                                        json
+                                                    .decode(
+                                                        currentWatchlist[
+                                                            i])[
+                                                        'price_change_percentage_24h_in_currency']
+                                                    .toDouble() <=
+                                                0
+                                            ? Icon(Icons.arrow_drop_down,
+                                                size: 20, color: Colors.red)
+                                            : Icon(
+                                                Icons.arrow_drop_up,
+                                                size: 20,
+                                                color: Colors.green,
+                                              ),
                                         Text(
-                                          'Market Cap'.toUpperCase(),
+                                          '${json.decode(currentWatchlist[i])['price_change_percentage_24h_in_currency'].toDouble().toStringAsFixed(1)}%',
+                                          textAlign: TextAlign.right,
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: themeNotifier.isDark
-                                                  ? Colors.white
-                                                  : Colors.grey.shade700,
-                                              fontSize: 11),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                              rows: List<DataRow>.generate(
-                                  currentWatchlist.length, (i) {
-                                return DataRow(
-                                  cells: <DataCell>[
-                                    DataCell(
-                                        Container(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            '${i + 1}',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: themeNotifier.isDark
-                                                    ? Colors.white
-                                                    : Colors.grey.shade600,
-                                                fontSize: 11),
-                                          ),
-                                        ), onTap: (() {
-                                      Navigator.pushNamed(
-                                          context, coindetailRoute,
-                                          arguments: Arguments(
-                                              json.decode(currentWatchlist[i]),
-                                              'watchlist'));
-                                    })),
-                                    DataCell(
-                                        Container(
-                                          alignment: Alignment.centerLeft,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              const SizedBox(
-                                                height: 4,
-                                              ),
-                                              CachedNetworkImage(
-                                                imageUrl:
-                                                    '${json.decode(currentWatchlist[i])['image']}',
-                                                width: 20,
-                                                height: 20,
-                                                placeholder: (context, url) =>
-                                                    CircularProgressIndicator(
-                                                        valueColor:
-                                                            AlwaysStoppedAnimation(
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    116,
-                                                                    255,
-                                                                    3))),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Icon(Icons.error),
-                                              ),
-                                              const SizedBox(
-                                                height: 4,
-                                              ),
-                                              Text(
-                                                '${json.decode(currentWatchlist[i])['symbol']}'
-                                                    .toUpperCase(),
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: themeNotifier.isDark
-                                                        ? Colors.white
-                                                        : Colors.grey.shade900,
-                                                    fontSize: 12),
-                                              ),
-                                            ],
-                                          ),
-                                        ), onTap: (() {
-                                      Navigator.pushNamed(
-                                          context, coindetailRoute,
-                                          arguments: Arguments(
-                                              json.decode(currentWatchlist[i]),
-                                              'watchlist'));
-                                    })),
-                                    DataCell(
-                                        Container(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            '\$${NumberFormat("#,##0.00", "en_US").format(json.decode(currentWatchlist[i])['current_price'].toDouble())}',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                color: themeNotifier.isDark
-                                                    ? Colors.white
-                                                    : Colors.grey.shade900,
-                                                fontSize: 13),
-                                          ),
-                                        ), onTap: (() {
-                                      Navigator.pushNamed(
-                                          context, coindetailRoute,
-                                          arguments: Arguments(
-                                              json.decode(currentWatchlist[i]),
-                                              'watchlist'));
-                                    })),
-                                    DataCell(
-                                        Container(
-                                          alignment: Alignment.centerRight,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              json
+                                              fontWeight: FontWeight.w500,
+                                              color: json
                                                           .decode(
                                                               currentWatchlist[
                                                                   i])[
                                                               'price_change_percentage_24h_in_currency']
                                                           .toDouble() <=
                                                       0
-                                                  ? Icon(Icons.arrow_drop_down,
-                                                      size: 20,
-                                                      color: Colors.red)
-                                                  : Icon(
-                                                      Icons.arrow_drop_up,
-                                                      size: 20,
-                                                      color: Colors.green,
-                                                    ),
-                                              Text(
-                                                '${json.decode(currentWatchlist[i])['price_change_percentage_24h_in_currency'].toDouble().toStringAsFixed(1)}%',
-                                                textAlign: TextAlign.right,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: json
-                                                                .decode(
-                                                                    currentWatchlist[
-                                                                        i])[
-                                                                    'price_change_percentage_24h_in_currency']
-                                                                .toDouble() <=
-                                                            0
-                                                        ? Colors.red
-                                                        : Colors.green,
-                                                    fontSize: 13),
-                                              ),
-                                            ],
-                                          ),
-                                        ), onTap: (() {
-                                      Navigator.pushNamed(
-                                          context, coindetailRoute,
-                                          arguments: Arguments(
-                                              json.decode(currentWatchlist[i]),
-                                              'watchlist'));
-                                    })),
-                                    DataCell(
-                                        Container(
-                                          padding: EdgeInsets.only(right: 20),
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            '\$${NumberFormat('###,###,000').format(json.decode(currentWatchlist[i])['market_cap'])}',
-                                            textAlign: TextAlign.right,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                color: themeNotifier.isDark
-                                                    ? Colors.white
-                                                    : Colors.grey.shade900,
-                                                fontSize: 13),
-                                          ),
-                                        ), onTap: (() {
-                                      Navigator.pushNamed(
-                                          context, coindetailRoute,
-                                          arguments: Arguments(
-                                              json.decode(currentWatchlist[i]),
-                                              'watchlist'));
-                                    })),
-                                  ],
-                                );
+                                                  ? Colors.red
+                                                  : Colors.green,
+                                              fontSize: 13),
+                                        ),
+                                      ],
+                                    ),
+                                  ), onTap: (() {
+                                Navigator.pushNamed(context, coindetailRoute,
+                                    arguments: Arguments(
+                                        json.decode(currentWatchlist[i]),
+                                        'watchlist'));
                               })),
-                        ))
+                              DataCell(
+                                  Container(
+                                    padding: EdgeInsets.only(right: 20),
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      '\$${NumberFormat('###,###,000').format(json.decode(currentWatchlist[i])['market_cap'])}',
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: themeNotifier.isDark
+                                              ? Colors.white
+                                              : Colors.grey.shade900,
+                                          fontSize: 13),
+                                    ),
+                                  ), onTap: (() {
+                                Navigator.pushNamed(context, coindetailRoute,
+                                    arguments: Arguments(
+                                        json.decode(currentWatchlist[i]),
+                                        'watchlist'));
+                              })),
+                            ],
+                          );
+                        })),
+                  ))
             ],
           ));
     });
