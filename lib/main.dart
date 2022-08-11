@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:cryptmark/models/coin_model.dart';
 import 'package:cryptmark/routing/router.dart';
 import 'package:cryptmark/services/coin_service.dart';
@@ -41,7 +42,25 @@ class MyApp extends StatelessWidget {
               theme: themeNotifier.isDark
                   ? ThemeData.dark()
                   : CustomTheme.lightTheme,
-              home: HomePage());
+              home: AnimatedSplashScreen(
+                duration: 3000,
+                splash: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/logo.png",
+                      scale: 4,
+                    ),
+                    Text(
+                      "Cryptmark",
+                      style: TextStyle(fontSize: 20, color: Colors.lightGreen),
+                    )
+                  ],
+                ),
+                nextScreen: HomePage(),
+                splashTransition: SplashTransition.fadeTransition,
+                backgroundColor: Colors.white,
+              ));
         }));
   }
 }

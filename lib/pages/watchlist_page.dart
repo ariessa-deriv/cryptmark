@@ -49,13 +49,22 @@ class _WatchlistPageState extends State<WatchlistPage> {
             backgroundColor: themeNotifier.isDark
                 ? Colors.grey.shade800
                 : Colors.grey.shade200,
-            title: Text(
-              'Watchlist',
-              style: TextStyle(
-                color: themeNotifier.isDark
-                    ? Colors.grey.shade200
-                    : Colors.grey.shade600,
-              ),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset(
+                  'assets/logo.png',
+                  fit: BoxFit.contain,
+                  height: 40,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Cryptmark",
+                    style: TextStyle(color: Colors.lightGreen),
+                  ),
+                )
+              ],
             ),
             automaticallyImplyLeading: false,
             actions: <Widget>[
