@@ -1,21 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cryptmark/models/argument_model.dart';
-import 'package:cryptmark/models/coin_model.dart';
 import 'package:cryptmark/routing/router.dart';
 import 'package:cryptmark/states/coin_cubit.dart';
 import 'package:cryptmark/states/coin_state.dart';
-import 'dart:convert';
-import 'package:cryptmark/pages/search_page.dart';
 import 'package:cryptmark/theme/theme_model.dart';
 import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
-import 'package:cryptmark/widgets/search_bar.dart';
 import 'package:cryptmark/widgets/skeleton_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,24 +19,32 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-// TODO: Use CoinModel
 class _HomePageState extends State<HomePage> {
   late CoinCubit cubit;
+
+  Future<void> setCoinsList(List<dynamic> coinsList) async {
+    // Create an instance of SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+
+    List<String> stringCoinsList = coinsList.map((i) => i.toString()).toList();
+
+    // Set value of 'coinsList' key in SharedPreferences
+    prefs.setStringList('coinsList', stringCoinsList);
+  }
 
   // Get API's last fetch time from SharedPreferences
   Future<void> getApiLastFetchTimeFromSharedPrefs() async {
     // Create an instance of SharedPreferences
     final prefs = await SharedPreferences.getInstance();
 
-    // Get value of 'ApilastFetchTime' key in SharedPreferences
-    String? ApiLastFetchTime = prefs.getString('ApiLastFetchTime');
-    print('APi last fetch: $ApiLastFetchTime');
+    // Get value of 'apilastFetchTime' key in SharedPreferences
+    String? apiLastFetchTime = prefs.getString('apiLastFetchTime');
 
     // If API's last fetch time is not null (the API has been fetched at least once)
-    if (ApiLastFetchTime != null) {
+    if (apiLastFetchTime != null) {
       // Check if current time is more than 10 seconds than lastFetchTime
       final timeDifference =
-          DateTime.now().difference(DateTime.parse(ApiLastFetchTime)).inSeconds;
+          DateTime.now().difference(DateTime.parse(apiLastFetchTime)).inSeconds;
 
       // If the time difference between current time and API's last fetch time
       // is more than 10 seconds, fetch coins from API again
@@ -66,8 +68,8 @@ class _HomePageState extends State<HomePage> {
     // Create an instance of SharedPreferences
     final prefs = await SharedPreferences.getInstance();
 
-    // Set value of 'ApilastFetchTime' key in SharedPreferences
-    prefs.setString('ApiLastFetchTime', DateTime.now().toString());
+    // Set value of 'apilastFetchTime' key in SharedPreferences
+    prefs.setString('apiLastFetchTime', DateTime.now().toString());
   }
 
   @override
@@ -101,10 +103,14 @@ class _HomePageState extends State<HomePage> {
             automaticallyImplyLeading: false,
             actions: <Widget>[
               IconButton(
-                  onPressed: () {
-                    // TODO: Navigate to Explore page
-                  },
-                  icon: Icon(Icons.search)),
+                onPressed: () {
+                  Navigator.pushNamed(context, searchRoute);
+                },
+                icon: Icon(Icons.search),
+                color: themeNotifier.isDark
+                    ? Colors.grey.shade200
+                    : Colors.grey.shade600,
+              ),
               IconButton(
                 onPressed: () {
                   themeNotifier.isDark
@@ -123,24 +129,6 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
-              // SizedBox(
-              //   height: 50,
-              // ),
-              // Text(
-              //   'Homepage',
-              //   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              // ),
-              // SizedBox(
-              //   height: 20,
-              // ),
-              // Text(
-              //   'Display prices of 50 cryptocurrencies',
-              //   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-              // ),
-              // SizedBox(
-              //   height: 50,
-              // ),
-              // TODO: Add simple chart for bitcoin
               BlocBuilder(
                   bloc: cubit,
                   builder: (context, state) {
@@ -149,6 +137,8 @@ class _HomePageState extends State<HomePage> {
                     }
 
                     if (state is CoinLoaded) {
+                      setCoinsList(state.coinModel);
+
                       return Expanded(
                           child: SingleChildScrollView(
                         child: DataTable(

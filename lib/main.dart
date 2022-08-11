@@ -47,9 +47,9 @@ class MyApp extends StatelessWidget {
                 splash: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "assets/images/logo.png",
-                      scale: 4,
+                    Expanded(
+                      child: Image.asset("assets/images/logo.png",
+                          width: 200, height: 200),
                     ),
                     Text(
                       "Cryptmark",
