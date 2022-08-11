@@ -1,3 +1,4 @@
+import 'package:cryptmark/models/argument_model.dart';
 import 'package:cryptmark/pages/coin_detail_page.dart';
 import 'package:cryptmark/pages/home_page.dart';
 import 'package:cryptmark/pages/search_page.dart';
@@ -21,8 +22,10 @@ Route generateRoute(RouteSettings settings) {
     case watchlistRoute:
       return MaterialPageRoute(builder: (_) => const WatchlistPage());
     case coindetailRoute:
-      final args = settings.arguments as Map<dynamic, dynamic>;
-      return MaterialPageRoute(builder: (_) => CoinDetail(coinDetail: args));
+      final args = settings.arguments as Arguments;
+      return MaterialPageRoute(
+          builder: (_) => CoinDetail(
+              coinDetail: args.coinDetail, previousPage: args.previousPage));
 
     default:
       return MaterialPageRoute(
