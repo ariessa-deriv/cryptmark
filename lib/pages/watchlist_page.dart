@@ -95,23 +95,6 @@ class _WatchlistPageState extends State<WatchlistPage> {
           bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
-              // SizedBox(
-              //   height: 50,
-              // ),
-              // Text(
-              //   'Watchlist',
-              //   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              // ),
-              // SizedBox(
-              //   height: 20,
-              // ),
-              // Text(
-              //   'Display prices of your favourite coins',
-              //   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-              // ),
-              // SizedBox(
-              //   height: 50,
-              // ),
               Expanded(
                   child: currentWatchlist.length < 1
                       ? EmptyWatchlist()

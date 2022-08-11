@@ -19,24 +19,17 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-// TODO: Use CoinModel
 class _HomePageState extends State<HomePage> {
   late CoinCubit cubit;
-  bool _isCoinNameEmpty = true;
-  final TextEditingController textController = TextEditingController();
-  final String hintText = 'Search for a coin...';
-  late List<dynamic> coinsList;
-  List<dynamic> filteredList = [];
-  // String query = "";
 
-  // Filter coins list based on search query
-  searchCoin(List<dynamic> coinsList, String query) {
-    // Return list of people matching the condition
-    final foundCoin =
-        coinsList.where((element) => element['name'].contains(query));
+  Future<void> setCoinsList(List<dynamic> coinsList) async {
+    // Create an instance of SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
 
-    print('foundCoin: $foundCoin');
-    filteredList = foundCoin as List<dynamic>;
+    List<String> stringCoinsList = coinsList.map((i) => i.toString()).toList();
+
+    // Set value of 'coinsList' key in SharedPreferences
+    prefs.setStringList('coinsList', stringCoinsList);
   }
 
   // Get API's last fetch time from SharedPreferences
@@ -44,15 +37,14 @@ class _HomePageState extends State<HomePage> {
     // Create an instance of SharedPreferences
     final prefs = await SharedPreferences.getInstance();
 
-    // Get value of 'ApilastFetchTime' key in SharedPreferences
-    String? ApiLastFetchTime = prefs.getString('ApiLastFetchTime');
-    print('APi last fetch: $ApiLastFetchTime');
+    // Get value of 'apilastFetchTime' key in SharedPreferences
+    String? apiLastFetchTime = prefs.getString('apiLastFetchTime');
 
     // If API's last fetch time is not null (the API has been fetched at least once)
-    if (ApiLastFetchTime != null) {
+    if (apiLastFetchTime != null) {
       // Check if current time is more than 10 seconds than lastFetchTime
       final timeDifference =
-          DateTime.now().difference(DateTime.parse(ApiLastFetchTime)).inSeconds;
+          DateTime.now().difference(DateTime.parse(apiLastFetchTime)).inSeconds;
 
       // If the time difference between current time and API's last fetch time
       // is more than 10 seconds, fetch coins from API again
@@ -76,8 +68,8 @@ class _HomePageState extends State<HomePage> {
     // Create an instance of SharedPreferences
     final prefs = await SharedPreferences.getInstance();
 
-    // Set value of 'ApilastFetchTime' key in SharedPreferences
-    prefs.setString('ApiLastFetchTime', DateTime.now().toString());
+    // Set value of 'apilastFetchTime' key in SharedPreferences
+    prefs.setString('apiLastFetchTime', DateTime.now().toString());
   }
 
   @override
@@ -137,54 +129,6 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             children: [
-              // Search bar
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 20),
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(boxShadow: [
-                  BoxShadow(
-                      offset: const Offset(12, 26),
-                      blurRadius: 50,
-                      spreadRadius: 0,
-                      color: Colors.grey.withOpacity(.1)),
-                ]),
-                child: TextField(
-                  controller: textController,
-                  onChanged: ((value) {
-                    // searchCoin(coinsList, value);
-
-                    var test = coinsList
-                        .where((element) => element['name'].contains(value))
-                        .toString();
-                    print(
-                        'result: ${coinsList.where((element) => element['name'].contains(value))}');
-                  }),
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: hintText,
-                    hintStyle: const TextStyle(color: Colors.grey),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 20.0),
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    ),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    ),
-                  ),
-                ),
-              ),
-
               BlocBuilder(
                   bloc: cubit,
                   builder: (context, state) {
@@ -193,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                     }
 
                     if (state is CoinLoaded) {
-                      coinsList = state.coinModel;
+                      setCoinsList(state.coinModel);
 
                       return Expanded(
                           child: SingleChildScrollView(
