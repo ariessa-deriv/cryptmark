@@ -51,7 +51,7 @@ class _SearchPageState extends State<SearchPage> {
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
           resizeToAvoidBottomInset: false,
-          bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
+          // bottomNavigationBar: BottomNavBar(themeNotifier: themeNotifier),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,

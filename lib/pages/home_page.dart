@@ -105,6 +105,19 @@ class _HomePageState extends State<HomePage> {
             automaticallyImplyLeading: false,
             actions: <Widget>[
               IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchPage(searchCoin: '')));
+                  },
+                  icon: Icon(
+                    Icons.search,
+                    // color: themeNotifier.isDark
+                    //     ? Colors.grey.shade200
+                    //     : Colors.grey.shade600,
+                  )),
+              IconButton(
                 onPressed: () {
                   themeNotifier.isDark
                       ? themeNotifier.isDark = false
