@@ -19,6 +19,8 @@ dependencies:
   flutter_bloc: ^8.0.1
   intl: ^0.17.0
   cached_network_image: ^3.2.1
+  rive: ^0.9.1
+  rive_splash_screen: ^0.1.1
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +32,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/rive/

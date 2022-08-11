@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
@@ -41,7 +42,14 @@ class MyApp extends StatelessWidget {
               theme: themeNotifier.isDark
                   ? ThemeData.dark()
                   : CustomTheme.lightTheme,
-              home: HomePage());
+              home: SplashScreen.navigate(
+                name: "assets/rive/splash.riv",
+                next: (_) => HomePage(),
+                until: () => Future.delayed(Duration(seconds: 5)),
+                startAnimation: "start",
+                endAnimation: "end",
+                backgroundColor: Colors.white,
+              ));
         }));
   }
 }
