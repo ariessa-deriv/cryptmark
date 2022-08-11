@@ -1,6 +1,6 @@
 import 'package:cryptmark/models/coin_model.dart';
 import 'package:cryptmark/pages/home_page.dart';
-import 'package:cryptmark/pages/search_page.dart';
+import 'package:cryptmark/pages/explore_page.dart';
 import 'package:flutter/material.dart';
 
 class SearchBar extends StatefulWidget {
@@ -42,11 +42,11 @@ class _SearchBarState extends State<SearchBar> {
       child: TextField(
         controller: textController,
         onSubmitted: (value) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      SearchPage(searchCoin: textController.text)));
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) =>
+          //             SearchPage(searchCoin: textController.text)));
         },
         decoration: InputDecoration(
           prefixIcon: const Icon(

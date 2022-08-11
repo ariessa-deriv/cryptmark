@@ -1,7 +1,7 @@
 import 'package:cryptmark/models/argument_model.dart';
 import 'package:cryptmark/pages/coin_detail_page.dart';
 import 'package:cryptmark/pages/home_page.dart';
-import 'package:cryptmark/pages/search_page.dart';
+import 'package:cryptmark/pages/explore_page.dart';
 import 'package:cryptmark/pages/watchlist_page.dart';
 import 'package:flutter/material.dart';
 

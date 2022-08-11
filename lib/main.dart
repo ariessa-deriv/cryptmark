@@ -44,12 +44,19 @@ class MyApp extends StatelessWidget {
                 ? ThemeData.dark()
                 : CustomTheme.lightTheme,
             home: AnimatedSplashScreen(
-              duration: 4000,
-              splash: Container(
-                alignment: Alignment.center,
-                child: Image.asset(
-                  "assets/images/logo_wname.png",
-                ),
+              duration: 3000,
+              splash: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Image.asset("assets/images/logo.png",
+                        width: 200, height: 200),
+                  ),
+                  Text(
+                    "Cryptmark",
+                    style: TextStyle(fontSize: 20, color: Colors.lightGreen),
+                  )
+                ],
               ),
               splashIconSize: 200,
               nextScreen: BottomNavBar(
