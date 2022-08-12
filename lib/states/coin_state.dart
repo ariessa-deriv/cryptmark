@@ -12,6 +12,5 @@ class CoinLoaded extends CoinState {
 
 class CoinError extends CoinState {
   final String errorMessage;
-
   CoinError({required this.errorMessage});
 }

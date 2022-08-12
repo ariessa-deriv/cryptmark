@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cryptmark/models/argument_model.dart';
+import 'explore_page.dart';
 import 'package:cryptmark/routing/router.dart';
 import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
 import 'package:cryptmark/widgets/empty_watchlist.dart';
@@ -46,22 +47,23 @@ class _WatchlistPageState extends State<WatchlistPage> {
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
           appBar: AppBar(
-            backgroundColor: themeNotifier.isDark
-                ? Colors.grey.shade800
-                : Colors.grey.shade200,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset(
-                  'assets/logo.png',
-                  fit: BoxFit.contain,
-                  height: 40,
-                ),
+                // Image.asset(
+                //   'assets/logo.png',
+                //   fit: BoxFit.contain,
+                //   height: 40,
+                // ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Cryptmark",
-                    style: TextStyle(color: Colors.lightGreen),
+                    "Watchlist",
+                    style: TextStyle(
+                        // color: themeNotifier.isDark
+                        //     ? Colors.grey.shade200
+                        //     : Colors.grey.shade600,
+                        ),
                   ),
                 )
               ],
@@ -73,9 +75,6 @@ class _WatchlistPageState extends State<WatchlistPage> {
                   Navigator.pushNamed(context, searchRoute);
                 },
                 icon: Icon(Icons.search),
-                color: themeNotifier.isDark
-                    ? Colors.grey.shade200
-                    : Colors.grey.shade600,
               ),
               IconButton(
                 onPressed: () {
@@ -86,9 +85,9 @@ class _WatchlistPageState extends State<WatchlistPage> {
                 icon: Icon(themeNotifier.isDark
                     ? Icons.nightlight_rounded
                     : Icons.wb_sunny),
-                color: themeNotifier.isDark
-                    ? Colors.grey.shade200
-                    : Colors.grey.shade600,
+                // color: themeNotifier.isDark
+                //     ? Colors.grey.shade200
+                //     : Colors.grey.shade600,
               )
             ],
           ),

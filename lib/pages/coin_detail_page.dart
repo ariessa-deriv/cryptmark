@@ -94,13 +94,7 @@ class _CoinDetailState extends State<CoinDetail> {
     return Consumer(
       builder: (context, ThemeModel themeNotifier, child) {
         return Scaffold(
-          backgroundColor: themeNotifier.isDark
-              ? Colors.grey.shade900
-              : Color.fromARGB(245, 255, 255, 255),
           appBar: AppBar(
-            backgroundColor: themeNotifier.isDark
-                ? Colors.grey.shade800
-                : Colors.grey.shade200,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -146,11 +140,9 @@ class _CoinDetailState extends State<CoinDetail> {
                           Text("${widget.coinDetail['name']}",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  color: themeNotifier.isDark
-                                      ? Colors.white
-                                      : Colors.grey.shade700)),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              )),
                           SizedBox(
                             width: 5,
                           ),
@@ -158,11 +150,9 @@ class _CoinDetailState extends State<CoinDetail> {
                               "(${widget.coinDetail['symbol'].toString().toUpperCase()})",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                  color: themeNotifier.isDark
-                                      ? Colors.grey.shade500
-                                      : Colors.grey.shade600)),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              )),
                         ],
                       ),
               ],
@@ -175,7 +165,7 @@ class _CoinDetailState extends State<CoinDetail> {
                       : Icons.star_border,
                   color: doesCoinExists(widget.coinDetail['symbol'])
                       ? Colors.yellow
-                      : Colors.grey.shade600,
+                      : Colors.black,
                 ),
                 onPressed: () {
                   // If coin exists, remove coin from watchlist
@@ -189,8 +179,6 @@ class _CoinDetailState extends State<CoinDetail> {
             leading: IconButton(
               icon: Icon(
                 Icons.keyboard_arrow_left,
-                color:
-                    themeNotifier.isDark ? Colors.white : Colors.grey.shade800,
               ),
               onPressed: () {
                 // If previous page is Homepage,
