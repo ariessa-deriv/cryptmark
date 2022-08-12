@@ -3,6 +3,14 @@
 <p align="center">  
 🎯 Cryptmark is a mobile app that tracks 50 cryptocurrencies using data from <a href="https://www.coingecko.com/en/api/documentation">CoinGecko API</a>.
 </p>
+
+<p align="center">
+<img src="demo.gif" style="display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%"/>
+</p>
+
 </br>
 
 <h2>Screenshots</h2>
@@ -13,7 +21,7 @@
 <img src="/screenshots/market_page.png" style="display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 50%"/>
+  width: 30%"/>
 </p>
 
 <h3>Explore Page</h3>
@@ -22,9 +30,8 @@
 <img src="/screenshots/explore_page.png" style="display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 50%"/>
+  width: 30%"/>
 </p>
-
 
 <h3>Watchlist Page</h3>
 
@@ -32,7 +39,7 @@
 <img src="/screenshots/watchlist_page.png" style="display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 50%"/>
+  width: 30%"/>
 </p>
 
 <h3>Coin Detail Page</h3>
@@ -41,7 +48,7 @@
 <img src="/screenshots/coin_detail_page.png" style="display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 50%"/>
+  width: 30%"/>
 </p>
 
 ## Technologies Used
