@@ -1,8 +1,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cryptmark/widgets/application_bar.dart';
-import 'package:cryptmark/widgets/bottom_navigation_bar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -96,8 +95,9 @@ class _CoinDetailState extends State<CoinDetail> {
         return Scaffold(
           backgroundColor: themeNotifier.isDark
               ? Colors.grey.shade900
-              : Color.fromARGB(245, 255, 255, 255),
+              : Color.fromARGB(255, 255, 255, 255),
           appBar: AppBar(
+            elevation: 0,
             backgroundColor: themeNotifier.isDark
                 ? Colors.grey.shade800
                 : Colors.grey.shade200,
@@ -193,19 +193,9 @@ class _CoinDetailState extends State<CoinDetail> {
                     themeNotifier.isDark ? Colors.white : Colors.grey.shade800,
               ),
               onPressed: () {
-                // If previous page is Homepage,
-                // remove current page from Navigator stack
-                // and navigate to Homepage
-                if (widget.previousPage == '/') {
-                  Navigator.pop(context);
-                }
-                // Else if previous page is not Homepage (i.e. Watchlist Page),
-                // remove current page from Navigator stack
-                // navigate to previous page
-                // rebuild widget tree in previous page
-                else {
-                  Navigator.popAndPushNamed(context, widget.previousPage);
-                }
+                // Remove current page from Navigator stack
+                // and navigate to previous page
+                Navigator.pop(context);
               },
             ),
           ),

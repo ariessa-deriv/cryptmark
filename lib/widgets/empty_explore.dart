@@ -17,12 +17,16 @@ class _EmptyExploreState extends State<EmptyExplore> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset('assets/images/empty_explore.png', width: 300, height: 300),
+        Image.asset('assets/images/empty_explore.png'),
+        Text(
+          'There\'s always another coin.',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+        ),
         SizedBox(height: 20),
         Text(
-          'So, what\'s your next moon mission?',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          'Start searching now!',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
         ),
       ],
     );

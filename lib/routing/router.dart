@@ -1,6 +1,6 @@
 import 'package:cryptmark/models/argument_model.dart';
 import 'package:cryptmark/pages/coin_detail_page.dart';
-import 'package:cryptmark/pages/home_page.dart';
+import 'package:cryptmark/pages/market_page.dart';
 import 'package:cryptmark/pages/explore_page.dart';
 import 'package:cryptmark/pages/watchlist_page.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +13,9 @@ const String searchRoute = 'search';
 Route generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case homeRoute:
-      return MaterialPageRoute(builder: (_) => const HomePage());
+      return MaterialPageRoute(builder: (_) => const MarketPage());
     case searchRoute:
-      return MaterialPageRoute(
-          builder: (_) => const SearchPage(
-                searchCoin: '',
-              ));
+      return MaterialPageRoute(builder: (_) => const ExplorePage());
     case watchlistRoute:
       return MaterialPageRoute(builder: (_) => const WatchlistPage());
     case coindetailRoute:

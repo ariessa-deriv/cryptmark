@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cryptmark/pages/explore_page.dart';
 import 'package:cryptmark/routing/router.dart';
 import 'package:flutter/material.dart';
 
@@ -27,16 +28,6 @@ class _EmptyWatchlistState extends State<EmptyWatchlist> {
           'Add a new coin to get started!',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
         ),
-        SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, searchRoute);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: const Text('Add to Watchlist'),
-          ),
-        )
       ],
     );
   }
