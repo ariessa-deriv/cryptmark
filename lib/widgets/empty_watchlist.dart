@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cryptmark/pages/explore_page.dart';
 import 'package:cryptmark/routing/router.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +31,7 @@ class _EmptyWatchlistState extends State<EmptyWatchlist> {
         SizedBox(height: 20),
         ElevatedButton(
           onPressed: () {
-            Navigator.pushNamed(context, searchRoute);
+            Navigator.of(context).pushNamed(searchRoute);
           },
           child: Padding(
             padding: const EdgeInsets.all(16),
